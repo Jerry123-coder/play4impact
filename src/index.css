@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #0D1117;
+  --color-brand-card: #161B22;
+  --color-brand-primary: #1212cf;
+  --color-brand-secondary: #1F8AF1;
+  --color-brand-accent: #FAF10F;
+  --color-brand-text-primary: #C9D1D9;
+  --color-brand-text-secondary: #8B949E;
+  
+  --color-p4i-navy: #10324B;
+  --color-p4i-teal: #005461;
+  --color-p4i-lime: #83D318;
+  --color-p4i-cream: #F1F9E5;
+
+  --box-shadow-glow-sm: 0 0 15px 0 rgba(88, 166, 255, 0.3);
+  --box-shadow-glow-md: 0 0 25px 0 rgba(88, 166, 255, 0.4);
+  --box-shadow-glow-lime: 0 0 25px 0 rgba(131, 211, 24, 0.4);
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/src/assets/fonts/Nexa-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/src/assets/fonts/Nexa-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/src/assets/fonts/Nexa-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+.font-boldonse {
+  font-family: 'Outfit', 'Boldonse', 'Impact', sans-serif;
+}
+
+.font-nexa {
+  font-family: 'Nexa', 'Inter', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes marquee-flow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-flow {
+  display: flex;
+  width: max-content;
+  animation: marquee-flow 40s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-flow:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-reverse-flow {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-reverse-flow {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse-flow 45s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-reverse-flow:hover {
+  animation-play-state: paused;
+}
