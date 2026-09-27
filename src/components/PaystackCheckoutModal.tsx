@@ -196,7 +196,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
   const handlePaystackPayment = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!fullName.trim() || !email.trim() || !phone.trim()) {
+    if (!fullName.trim() || !email.trim()) {
       toast.error('Please fill in all attendee contact details.');
       return;
     }
@@ -208,9 +208,13 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
 
     setLoading(true);
 
-    const paystackKey =
-      import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ||
-      'pk_test_35fa9d1e57c1340156d94a974b7eef7141f38e07';
+    const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+
+    if (!paystackKey) {
+      setLoading(false);
+      toast.error('Payment gateway key is not configured. Please set VITE_PAYSTACK_PUBLIC_KEY.');
+      return;
+    }
 
     const reference = `P4I-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
@@ -635,42 +639,41 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Inputs: Email & Phone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
-                        {isGift ? 'Your Email Address *' : 'Email Address *'}
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                        <input
-                          type="email"
-                          required
-                          placeholder="kwame@example.com"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
-                        Phone Number *
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
-                        <input
-                          type="tel"
-                          required
-                          placeholder="0551128171"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
-                        />
-                      </div>
+                  {/* Input: Email */}
+                  <div>
+                    <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
+                      {isGift ? 'Your Email Address *' : 'Email Address *'}
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                      <input
+                        type="email"
+                        required
+                        placeholder="kwame@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
+                      />
                     </div>
                   </div>
+
+                  {/* Phone Number (commented out) */}
+                  {/* <div>
+                    <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
+                      Phone Number *
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                      <input
+                        type="tel"
+                        required
+                        placeholder="024xxxxxxx"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
+                      />
+                    </div>
+                  </div> */}
 
                   {/* Solid High-Impact Payment Button */}
                   <button

@@ -668,12 +668,12 @@ export const Play4ImpactPage: React.FC = () => {
               </p>
 
               {/* Community Partners Promo Banner */}
-              <div className="mt-4 p-3.5 rounded-2xl bg-[#005461]/60 border border-[#83D318]/50 max-w-xl mx-auto flex items-center justify-center gap-2.5 text-xs text-white shadow-lg">
+              {/* <div className="mt-4 p-3.5 rounded-2xl bg-[#005461]/60 border border-[#83D318]/50 max-w-xl mx-auto flex items-center justify-center gap-2.5 text-xs text-white shadow-lg">
                 <Gift className="w-5 h-5 text-[#83D318] shrink-0" />
                 <span>
                   <strong>Community Partners:</strong> Use promo code <code className="bg-[#83D318] text-[#10324B] px-2 py-0.5 rounded font-mono font-black">PLAY26</code> for <strong>12% off</strong> all pass tiers!
                 </span>
-              </div>
+              </div> */}
             </div>
 
             {/* Pricing Cards Grid */}
