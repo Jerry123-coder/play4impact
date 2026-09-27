@@ -5,7 +5,6 @@ import {
   Ticket,
   User,
   Mail,
-  Phone,
   Lock,
   Sparkles,
   Download,
@@ -113,7 +112,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
   const [quantity, setQuantity] = useState(1);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const phone = '';
 
   // Promo Code State
   const [promoCode, setPromoCode] = useState('');

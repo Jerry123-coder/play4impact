@@ -14,7 +14,6 @@ import {
   ChevronUp,
   HeartPulse,
   Crown,
-  Gift,
   Ticket,
   ChevronLeft,
   ChevronRight,
