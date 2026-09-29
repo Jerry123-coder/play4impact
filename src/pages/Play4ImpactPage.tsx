@@ -36,31 +36,31 @@ const PARTNERSHIP_MAILTO = 'mailto:techies4impact@gmail.com?subject=Play4Impact%
 export const ticketTiers: TicketTier[] = [
   {
     id: 'basic',
-    name: 'Basic Pass',
+    name: 'General Pass',
     price: 250,
-    tagline: 'Essential access to matches, innovation zones, and health checks.',
+    tagline: 'Basic',
     features: [
-      'Complimentary refreshments',
+      'Complimentary beverages (Drinks & Water)',
       'Access to watch padel matches (All attendees)',
-      'Access to partners / innovation zones',
+      'Access to partner / innovation zones',
       'Access to Health checks',
     ],
     color: 'green',
   },
   {
     id: 'standard',
-    name: 'Standard Pass',
+    name: 'Premium Pass',
     price: 500,
     popular: true,
     badge: 'MOST POPULAR',
-    tagline: 'Full clubhouse access + VIP Champions & Investor Mixer.',
+    tagline: 'Standard',
     features: [
-      'Complimentary refreshments',
+      'Complimentary beverages (Drinks & Water)',
       'Access to watch padel matches',
-      'Access to partners / innovation zones',
+      'Access to partner / innovation zones',
       'Access to health checks',
       'Automatic member of P4I Clubhouse',
-      'Access to Champions and investor mixer',
+      'Access to Champions and Investor mixer',
     ],
     color: 'blue',
   },
@@ -68,15 +68,14 @@ export const ticketTiers: TicketTier[] = [
     id: 'deluxe',
     name: 'Deluxe Pass',
     price: 950,
-    badge: 'VIP EXECUTIVE',
     tagline: 'Priority red-carpet experience, R&R wellness treat & souvenirs.',
     features: [
       'Priority check-in',
-      'Complimentary refreshments',
+      'Complimentary beverages (Drinks & Water)rinks & Water)',
       'Priority access to watch padel matches',
-      'Access to partners / innovation zones',
+      'Access to partner / innovation zones',
       'Access to health checks',
-      'Priority access to Champions and investor mixer',
+      'Priority Access to Champions and Investor mixer',
       'Automatic member of P4I Clubhouse',
       'Wellness treat by R&R',
       'P4I Lifestyle souvenir',
@@ -92,14 +91,14 @@ const faqs = [
   },
   {
     q: 'Can I participate in the Padel matches or watch?',
-    a: 'All attendees can watch the Padel matches. Players are limited to registered corporate entities unless otherwise stated. Deluxe and Standard pass holders receive priority viewing access and entry into the exclusive Champions & Investor Mixer.',
+    a: 'All attendees can watch the Padel matches. Players are limited to registered corporate entities unless otherwise stated.  ',
   },
   {
     q: 'How do payments work via Paystack?',
     a: 'Payments are processed securely via Paystack API (Mobile Money or Bank Cards in GHS). Upon successful payment, an instant digital gate pass with a unique reference code will be generated for you.',
   },
   {
-    q: 'What is the P4I Clubhouse and R&R Wellness Treat?',
+    q: ' What is the P4I Clubhouse?',
     a: 'P4I Clubhouse is a curated community of tech, corporate and sports lifestyle individuals. Approved members benefit from early updates, exclusive discounts and new developments within the Play4Impact ecosystem. Membership is by application. Deluxe Pass holders also receive a signature wellness treat curated by The Wellness Place by R&R, Accra’s members-only wellness club.',
   },
   {
@@ -132,39 +131,46 @@ const highlightsStories = [
     category: 'MATCH DAY ACTION',
     access: 'All Passes Access',
     title: 'Padel Championship Matches',
-    desc: 'Feel the energy as corporate teams and tech leaders battle it out on court.',
+    desc: 'Feel the energy as corporate teams and organizations battle it out on court.',
     image: '/images/p4i/hero.jpg',
   },
   {
     id: 2,
     category: 'VIP INVESTOR LOUNGE',
-    access: 'Standard & Deluxe Exclusive',
-    title: 'Champions & Investor Sunset Mixer',
-    desc: 'Connect with investors, VC partners and tech pioneers in our private sunset lounge.',
+    title: 'Champions & Investor Mixer',
+    desc: 'Connect with founders, ceos, investors and global leaders in a curated session.',
     image: '/images/p4i/mixer.jpg',
   },
   {
     id: 3,
     category: 'TECH & AI SHOWCASE',
     access: 'All Passes Access',
-    title: 'Digital Demos & Innovation Expo',
-    desc: 'Explore new digital products and AI tools from West Africa’s top tech teams.',
+    title: 'Digital Demos & Innovation Zone',
+    desc: 'Explore new digital products and AI tools from top tech teams.',
     image: '/images/p4i/networking.jpg',
   },
+  // {
+  //   id: 4,
+  //   category: 'WELLNESS & RECOVERY',
+  //   access: 'Deluxe Pass Exclusive',
+  //   title: 'Wellness Treat by R&R',
+  //   desc: 'Recharge between matches with a signature wellness treat from R&R wellness.',
+  //   image: '/images/p4i/wellness.jpg',
+  // },
   {
     id: 4,
-    category: 'WELLNESS & RECOVERY',
-    access: 'Deluxe Pass Exclusive',
-    title: 'Wellness Treat by R&R',
-    desc: 'Recharge between matches with a signature wellness treat from The Wellness Place by R&R.',
-    image: '/images/p4i/wellness.jpg',
+    category: 'COMMUNITY VIBES',
+    access: 'All Passes Access',
+    title: 'Networking & Entertainment',
+    desc: 'Enjoy curated soothing playlists between matches while connecting with like-minded individuals.',
+    image: '/images/p4i/clubhouse.jpg',
   },
   {
     id: 5,
     category: 'COMMUNITY VIBES',
     access: 'All Passes Access',
-    title: 'P4I Clubhouse & Executive Networking',
-    desc: 'A curated community of tech, corporate and sports lifestyle people. Celebrate wins and make deals.',
+    title: 'Brand Activations',
+    desc: 'Engage with premium brands within the Play4Impact ecosystem.',
     image: '/images/p4i/clubhouse.jpg',
   },
 ];
@@ -541,7 +547,7 @@ export const Play4ImpactPage: React.FC = () => {
                 <h1 className="font-boldonse flex flex-col gap-3 sm:gap-5 text-[min(calc((100vw_-_48px)/9.4),3rem)] sm:text-5xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-white leading-[1.3] drop-shadow-lg">
                   <span className="whitespace-nowrap">Play. Connect.</span>
                   <span className="relative self-start text-[#83D318]">
-                    Grow Impact
+                    Grow. Impact
                     <svg
                       aria-hidden="true"
                       className="absolute left-0 -bottom-3 sm:-bottom-4 w-full h-3 sm:h-4"
@@ -555,7 +561,13 @@ export const Play4ImpactPage: React.FC = () => {
                 </h1>
 
                 <p className="font-nexa text-slate-200 text-base sm:text-lg font-normal leading-relaxed max-w-xl pt-2">
-                  PLAY4IMPACT is a premier tech lifestyle event powered by Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.
+                 Play41mpact 2026 is a premier ecosystem
+engagement platform that leverages sport,
+wellness, networking, innovation, and community
+engagement to bring together professionals,
+entrepreneurs, innovators, institutions, corporate
+organizations, community leaders, diaspora
+stakeholders, and emerging changemakers.
                 </p>
 
                 {/* Date, Time & Venue Info Cards */}
@@ -654,7 +666,7 @@ export const Play4ImpactPage: React.FC = () => {
                     <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl bg-[#10324B]/90 backdrop-blur-md border border-white/10 flex items-center justify-between gap-3 shadow-xl">
                       <div className="min-w-0">
                         <span className="font-nexa text-[10px] uppercase tracking-wider text-[#83D318] font-bold block">
-                          Africa's Tech Lifestyle
+                          Africa's Tech Lifestyle Experience
                         </span>
                         <h3 className="font-nexa text-sm sm:text-base font-bold text-white uppercase tracking-tight">
                           Play4Impact 2026 - Padel Edition
@@ -726,10 +738,10 @@ export const Play4ImpactPage: React.FC = () => {
         <section id="tickets" className="py-24 bg-[#10324B] relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-lg">
+              {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-lg">
                 <Sparkles className="w-4 h-4" />
                 <span>Official Ticket Passes</span>
-              </div>
+              </div> */}
               <h2 className="font-nexa text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
                 Choose Your <span className="text-[#83D318]">Pass Tier</span>
               </h2>
@@ -802,7 +814,7 @@ export const Play4ImpactPage: React.FC = () => {
                           : 'bg-[#005461] hover:bg-[#006f80] text-white hover:scale-105'
                       }`}
                     >
-                      <span>Buy {tier.name}</span>
+                      <span>Buy Ticket</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -824,7 +836,7 @@ export const Play4ImpactPage: React.FC = () => {
                 The Five <span className="text-[#83D318]">Play4Impact Pillars</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
-                Fusing sports, technology, investment, wellness, and impact to inspire transformational growth across Africa.
+                Fusing sports, innovation, investment, wellness, and community to inspire transformational growth across Africa.
               </p>
             </div>
 
@@ -926,14 +938,14 @@ export const Play4ImpactPage: React.FC = () => {
                 <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                   Target Audience
                 </span>
-                <h2 className="font-nexa text-3xl sm:text-5xl font-black text-white uppercase tracking-tight leading-tight">
-                  Who Attends <span className="text-[#83D318]">Play 4 Impact?</span>
+                <h2 className="font-nexa text-3xl pt-3 sm:text-5xl font-black text-white uppercase tracking-tight leading-tight">
+                  Who Attends <span className="text-[#83D318]">Play4Impact?</span>
                 </h2>
                 <p className="text-slate-200 text-base leading-relaxed">
-                  The event brings together <strong>300+ participants</strong> from Ghana, West Africa, and global diaspora networks: seasoned executives and investors, everyday tech professionals, and people just starting out in tech. Everyone comes to share ideas, build partnerships, and grow together.
+                  The event brings together <strong>300+ participants</strong> from Ghana, West Africa, and global diaspora networks including: professionals, founders, cooporate executives, CEOs and investors, everyday tech professionals, and people just starting out in tech. Everyone comes to share ideas, build partnerships, and grow together.
                 </p>
 
-                <div className="p-6 rounded-2xl bg-[#005461]/60 border border-[#83D318]/40 shadow-xl space-y-3">
+                {/* <div className="p-6 rounded-2xl bg-[#005461]/60 border border-[#83D318]/40 shadow-xl space-y-3">
                   <div className="flex items-center gap-3">
                     <Trophy className="w-6 h-6 text-[#83D318]" />
                     <h4 className="font-nexa text-lg font-black text-white uppercase">Open To The Whole Tech Community</h4>
@@ -941,7 +953,7 @@ export const Play4ImpactPage: React.FC = () => {
                   <p className="text-xs text-slate-200 leading-relaxed">
                     Whether you're a founder, a VC partner, a developer shipping code every day, or someone curious about breaking into tech, Play4Impact creates an organic, high-energy space for real conversations and lifelong connections.
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="lg:col-span-7">
@@ -953,8 +965,8 @@ export const Play4ImpactPage: React.FC = () => {
                     { title: 'Diaspora Professionals', desc: 'Global Ghanaian & African diaspora stakeholders driving investment & talent.', icon: Globe },
                     { title: 'Government & Public Sector', desc: 'Policy makers, innovation hubs & public sector representatives.', icon: Building2 },
                     { title: 'Emerging Talent & Leaders', desc: 'Future tech leaders, innovators & high-potential ecosystem changemakers.', icon: Award },
-                    { title: 'Tech Professionals', desc: 'Developers, designers, product managers, data & IT pros building careers in tech.', icon: Laptop },
-                    { title: 'Beginners & Tech Enthusiasts', desc: 'Students, career switchers & anyone curious about tech. No experience needed.', icon: Seedling },
+                    { title: 'Professionals', desc: 'Engineers, creatives and everyone in between building their careers.', icon: Laptop },
+                    // { title: 'Beginners & Tech Enthusiasts', desc: 'Students, career switchers & anyone curious about tech. No experience needed.', icon: Seedling },
                   ].map((group, idx) => {
                     const GroupIcon = group.icon;
                     return (
@@ -995,7 +1007,7 @@ export const Play4ImpactPage: React.FC = () => {
                 Event Partners & <span className="text-[#83D318]">Sponsors</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
-                Supported by premier government institutions, global brands, wellness leaders, and media platforms.
+                Supported by government institutions, global brands, wellness and media organizations.
               </p>
             </div>
 
@@ -1072,7 +1084,7 @@ export const Play4ImpactPage: React.FC = () => {
                       className="flex items-center gap-2 hover:text-[#83D318] transition-colors"
                     >
                       <Phone className="w-4 h-4 text-[#83D318]" />
-                      <span>0578796905 / +233 57 879 6905</span>
+                      <span>+233 57 879 6905</span>
                     </a>
                     <a
                       href="mailto:techies4impact@gmail.com"
