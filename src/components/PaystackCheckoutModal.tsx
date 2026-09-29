@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  X,
-  CheckCircle2,
-  Ticket,
-  User,
-  Mail,
-  Lock,
-  Sparkles,
-  Download,
-  Copy,
-  Check,
-} from 'lucide-react';
+  FaXmark as X,
+  FaCircleCheck as CheckCircle2,
+  FaTicket as Ticket,
+  FaUser as User,
+  FaEnvelope as Mail,
+  FaLock as Lock,
+  FaStar as Sparkles,
+  FaDownload as Download,
+  FaRegCopy as Copy,
+  FaCheck as Check,
+} from 'react-icons/fa6';
 import toast from 'react-hot-toast';
 
 export interface TicketTier {
@@ -804,7 +804,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                     Rolider Sports Complex Gate Entry Pass
                   </span>
                   <p className="text-[11px] text-slate-300">
-                    Present this pass reference or digital code at the Rolider Sports Complex gate in Dzorwulu - Accra for entry.
+                    Present this pass reference or digital code at the Rolider Sports Complex gate in Shiashie - Accra for entry.
                   </p>
                 </div>
               </div>

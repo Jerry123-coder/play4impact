@@ -1,30 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Trophy,
-  Briefcase,
-  Users,
-  Zap,
-  CheckCircle2,
-  Calendar,
-  MapPin,
-  Clock,
-  Sparkles,
-  ArrowRight,
-  ChevronDown,
-  ChevronUp,
-  HeartPulse,
-  Crown,
-  Ticket,
-  ChevronLeft,
-  ChevronRight,
-  Globe,
-  Award,
-  Phone,
-  Mail,
-  Building2,
-  TrendingUp,
-} from 'lucide-react';
+  FaTrophy as Trophy,
+  FaBriefcase as Briefcase,
+  FaUsers as Users,
+  FaBolt as Zap,
+  FaCircleCheck as CheckCircle2,
+  FaRegCalendar as Calendar,
+  FaLocationDot as MapPin,
+  FaRegClock as Clock,
+  FaStar as Sparkles,
+  FaArrowRight as ArrowRight,
+  FaChevronDown as ChevronDown,
+  FaChevronUp as ChevronUp,
+  FaHeartPulse as HeartPulse,
+  FaCrown as Crown,
+  FaTicket as Ticket,
+  FaChevronLeft as ChevronLeft,
+  FaChevronRight as ChevronRight,
+  FaEarthAfrica as Globe,
+  FaAward as Award,
+  FaPhone as Phone,
+  FaEnvelope as Mail,
+  FaBuildingColumns as Building2,
+  FaArrowTrendUp as TrendingUp,
+  FaLaptopCode as Laptop,
+  FaSeedling as Seedling,
+} from 'react-icons/fa6';
 import { PaystackCheckoutModal, type TicketTier } from '../components/PaystackCheckoutModal';
+
+// Google Form for partnership sign-ups. Paste the form's share link here;
+// until then the partnership button falls back to email.
+const PARTNERSHIP_FORM_URL = '';
+const PARTNERSHIP_MAILTO = 'mailto:techies4impact@gmail.com?subject=Play4Impact%20Partnership%20Inquiry';
 
 export const ticketTiers: TicketTier[] = [
   {
@@ -81,7 +88,7 @@ export const ticketTiers: TicketTier[] = [
 const faqs = [
   {
     q: 'What is Play 4 Impact?',
-    a: 'PLAY4IMPACT is a premier tech lifestyle event presented by Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.',
+    a: 'PLAY4IMPACT is a premier tech lifestyle event powered Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.',
   },
   {
     q: 'Can I participate in the Padel matches or watch?',
@@ -93,12 +100,30 @@ const faqs = [
   },
   {
     q: 'What is the P4I Clubhouse and R&R Wellness Treat?',
-    a: 'P4I Clubhouse is a curated community of tech, corporate and sports lifestyle individuals. Approved members benefit from early updates, exclusive discounts and new developments within the Play4Impact ecosystem. Membership is by application. Deluxe Pass holders also receive a signature wellness pampering treatment curated by R&R.',
+    a: 'P4I Clubhouse is a curated community of tech, corporate and sports lifestyle individuals. Approved members benefit from early updates, exclusive discounts and new developments within the Play4Impact ecosystem. Membership is by application. Deluxe Pass holders also receive a signature wellness treat curated by The Wellness Place by R&R, Accra’s members-only wellness club.',
   },
   {
     q: 'Where and when is the event taking place?',
-    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Rolider Sports Complex, Dzorwulu - Accra, Ghana.',
+    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Rolider Sports Complex, Shiashie - Accra, Ghana.',
   },
+];
+
+// Event partners & sponsors (all Ghana-based or active in Ghana).
+// darkTile: logo is white/light and needs a dark background to be visible.
+const eventPartners: { name: string; category: string; logo: string; darkTile?: boolean }[] = [
+  { name: 'Diaspora Affairs', category: 'Office of the President', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
+  { name: 'Ghana Fintech', category: '& Payments Association', logo: '/images/p4i/sponsors/ghana-fintech.png' },
+  { name: 'The Wellness Place by R&R', category: 'Wellness Partner', logo: '/images/p4i/sponsors/the-wellness-place-rr.png' },
+  { name: 'Lyvv Cosmetics', category: 'Beauty & Wellness', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
+  { name: 'Media For Us', category: 'Media & Production', logo: '/images/p4i/sponsors/media-for-us.png' },
+  { name: 'YFM Ghana', category: 'Radio Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
+  { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
+  { name: 'Stella Artois', category: 'Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
+  { name: 'Decathlon', category: 'Sports & Apparel', logo: '/images/p4i/sponsors/decathlon.svg' },
+  { name: 'Rivia Clinics', category: 'Health & Wellness', logo: '/images/p4i/sponsors/rivia-clinics.png' },
+  { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.png', darkTile: true },
+  { name: 'MX24 TV', category: 'Television Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
+  { name: 'B&FT', category: 'Business Newspaper', logo: '/images/p4i/sponsors/bft.png' },
 ];
 
 const highlightsStories = [
@@ -107,45 +132,40 @@ const highlightsStories = [
     category: 'MATCH DAY ACTION',
     access: 'All Passes Access',
     title: 'Padel Championship Matches',
-    desc: 'Feel the electric energy as corporate teams and tech leaders battle on court in high-octane matches.',
+    desc: 'Feel the energy as corporate teams and tech leaders battle it out on court.',
     image: '/images/p4i/hero.jpg',
-    highlight: 'Corporate Teams • 4 Courts • Live Scores',
   },
   {
     id: 2,
     category: 'VIP INVESTOR LOUNGE',
     access: 'Standard & Deluxe Exclusive',
     title: 'Champions & Investor Sunset Mixer',
-    desc: 'Connect directly with angel investors, VC partners, and tech pioneers in our private sunset networking lounge.',
+    desc: 'Connect with investors, VC partners and tech pioneers in our private sunset lounge.',
     image: '/images/p4i/mixer.jpg',
-    highlight: '50+ Investors • Private VIP Lounge',
   },
   {
     id: 3,
     category: 'TECH & AI SHOWCASE',
     access: 'All Passes Access',
     title: 'Digital Demos & Innovation Expo',
-    desc: 'Explore cutting-edge digital products, AI tools, and smart lifestyle solutions built by West Africa’s top tech teams.',
+    desc: 'Explore new digital products and AI tools from West Africa’s top tech teams.',
     image: '/images/p4i/networking.jpg',
-    highlight: '20+ Interactive Startup Booths',
   },
   {
     id: 4,
     category: 'WELLNESS & RECOVERY',
     access: 'Deluxe Pass Exclusive',
-    title: 'R&R Luxury Wellness Treat',
-    desc: 'Indulge in complimentary health screenings, stress-relief massage therapies, and luxury wellness treats hosted by R&R.',
+    title: 'Wellness Treat by R&R',
+    desc: 'Recharge between matches with a signature wellness treat from The Wellness Place by R&R.',
     image: '/images/p4i/wellness.jpg',
-    highlight: 'Health Screenings & Spa Pampering',
   },
   {
     id: 5,
     category: 'COMMUNITY VIBES',
     access: 'All Passes Access',
     title: 'P4I Clubhouse & Executive Networking',
-    desc: 'Curated community of tech, corporate and sports lifestyle individuals. Celebrate wins with signature refreshments & organic deal-making.',
+    desc: 'A curated community of tech, corporate and sports lifestyle people. Celebrate wins and make deals.',
     image: '/images/p4i/clubhouse.jpg',
-    highlight: 'Curated Community • Application Only',
   },
 ];
 
@@ -280,18 +300,14 @@ const EventHighlightsCarousel: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Card Bottom Details */}
-                <div className="absolute bottom-6 left-6 right-6 space-y-2">
-                  <h3 className="font-nexa text-2xl font-extrabold text-white tracking-tight">
+                {/* Card Bottom Details: fixed-height, top-aligned so titles line up across cards */}
+                <div className="absolute bottom-6 left-6 right-6 h-34 xl:h-22 flex flex-col gap-2">
+                  <h3 className="font-nexa text-2xl font-extrabold text-white tracking-tight leading-tight line-clamp-2">
                     {story.title}
                   </h3>
-                  <p className="font-nexa text-xs text-slate-200 leading-relaxed">
+                  <p className="font-nexa text-sm text-slate-200 leading-relaxed line-clamp-3">
                     {story.desc}
                   </p>
-                  <div className="pt-1 text-[11px] font-bold text-[#83D318] flex items-center gap-1.5">
-                    <span>🏆</span>
-                    <span>{story.highlight}</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -318,29 +334,82 @@ const EventHighlightsCarousel: React.FC = () => {
   );
 };
 
+// Subtle padel-court line art for the hero. Drawn in landscape coordinates and
+// rotated for portrait; faded out towards the edges with a radial mask.
+const CourtBackdrop: React.FC<{ orientation: 'landscape' | 'portrait'; className?: string }> = ({ orientation, className = '' }) => {
+  const portrait = orientation === 'portrait';
+  return (
+    <svg
+      aria-hidden="true"
+      className={`pointer-events-none absolute inset-0 w-full h-full ${className}`}
+      viewBox={portrait ? '0 0 900 1600' : '0 0 1600 900'}
+      preserveAspectRatio="xMidYMid slice"
+      fill="none"
+      style={{
+        maskImage: 'radial-gradient(ellipse at center, #000 35%, transparent 80%)',
+        WebkitMaskImage: 'radial-gradient(ellipse at center, #000 35%, transparent 80%)',
+      }}
+    >
+      <g transform={portrait ? 'translate(900 0) rotate(90)' : undefined}>
+        {/* Glass walls */}
+        <rect x="136" y="146" width="1328" height="608" rx="22" stroke="#F1F9E5" strokeOpacity="0.05" strokeWidth="2" strokeDasharray="4 10" />
+        {/* Playing surface */}
+        <rect x="160" y="170" width="1280" height="560" rx="14" fill="#005461" fillOpacity="0.28" stroke="#F1F9E5" strokeOpacity="0.1" strokeWidth="2.5" />
+        {/* Service lines + centre service line */}
+        <g stroke="#F1F9E5" strokeOpacity="0.08" strokeWidth="2">
+          <line x1="352" y1="170" x2="352" y2="730" />
+          <line x1="1248" y1="170" x2="1248" y2="730" />
+          <line x1="352" y1="450" x2="1248" y2="450" />
+        </g>
+        {/* Net + posts */}
+        <line x1="800" y1="156" x2="800" y2="744" stroke="#83D318" strokeOpacity="0.22" strokeWidth="4" />
+        <circle cx="800" cy="156" r="6" fill="#83D318" fillOpacity="0.25" />
+        <circle cx="800" cy="744" r="6" fill="#83D318" fillOpacity="0.25" />
+      </g>
+    </svg>
+  );
+};
+
+// Fixed-width countdown cell: each digit gets its own slot so proportional
+// Nexa digits (e.g. a narrow "1") never make the timer jiggle as it ticks.
+const CountdownUnit: React.FC<{ value: number; label: string; highlight?: boolean }> = ({ value, label, highlight }) => (
+  <div className="min-w-[2.6rem] sm:min-w-[3.5rem] px-1.5 sm:px-2.5 py-1 rounded-lg bg-[#10324B] border border-[#83D318]/40 shadow-sm flex flex-col items-center leading-none">
+    <span className={`flex font-nexa font-black text-[15px] sm:text-xl ${highlight ? 'text-[#83D318]' : 'text-white'}`}>
+      {String(value).padStart(2, '0').split('').map((digit, i) => (
+        <span key={i} className="inline-block w-[0.68em] text-center">{digit}</span>
+      ))}
+    </span>
+    <span className="mt-1 font-nexa text-[8px] sm:text-[9px] font-extrabold uppercase tracking-[0.12em] text-slate-300">
+      {label}
+    </span>
+  </div>
+);
+
 export const Play4ImpactPage: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState<TicketTier>(ticketTiers[1]); // Default Premium Pass
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   // Dynamic Top Nav CTA Visibility
+  // Nav CTA stays hidden until the hero "Get Tickets" button has scrolled out of view.
+  // A callback ref (state) re-attaches the observer if the hero button is ever re-mounted.
   const [showTopNavCta, setShowTopNavCta] = useState(false);
-  const heroCtaRef = useRef<HTMLButtonElement | null>(null);
+  const [heroCtaEl, setHeroCtaEl] = useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    const target = heroCtaRef.current;
-    if (!target) return;
+    if (!heroCtaEl) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         setShowTopNavCta(!entry.isIntersecting);
       },
-      { threshold: 0.1 }
+      // Top margin = sticky nav height, so sliding under the nav counts as "gone"
+      { threshold: 0, rootMargin: '-72px 0px 0px 0px' }
     );
 
-    observer.observe(target);
+    observer.observe(heroCtaEl);
     return () => observer.disconnect();
-  }, []);
+  }, [heroCtaEl]);
 
   // Real-time Countdown timer targeting November 7, 2026
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -384,47 +453,32 @@ export const Play4ImpactPage: React.FC = () => {
         
         {/* Standalone Play 4 Impact Header */}
         <header className="sticky top-0 z-50 bg-[#005461]/95 border-b border-[#83D318]/40 backdrop-blur-xl shadow-2xl py-3 px-4 sm:px-8">
-          <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-3 md:gap-4">
             
             {/* Left: Play 4 Impact Transparent Logo */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 shrink-0">
               <a href="/" className="flex items-center gap-3 group">
                 <img
                   src="/images/p4i/logo.png"
                   alt="Play 4 Impact"
-                  className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_12px_rgba(131,211,24,0.35)] group-hover:scale-105 transition-transform"
+                  className="h-9 sm:h-12 w-auto object-contain drop-shadow-[0_0_12px_rgba(131,211,24,0.35)] group-hover:scale-105 transition-transform"
                 />
               </a>
             </div>
 
             {/* Center: Live Ticking Countdown Timer */}
-            <div className="flex items-center gap-2 sm:gap-3 font-nexa text-xs sm:text-base font-black text-white">
-              <span className="hidden xl:inline font-nexa text-xs font-extrabold uppercase text-slate-300 tracking-wider">
+            <div className="flex items-center gap-1.5 sm:gap-2" role="timer" aria-label="Countdown to event">
+              <span className="hidden xl:inline mr-1 font-nexa text-xs font-extrabold uppercase text-slate-300 tracking-wider">
                 Event Starts In:
               </span>
-              <div className="px-2.5 py-1 rounded-lg bg-[#10324B] border border-[#83D318]/40 shadow-sm flex items-baseline gap-1">
-                <span>{String(timeLeft.days).padStart(2, '0')}</span>
-                <span className="font-nexa text-[9px] font-extrabold text-[#83D318] uppercase">Days</span>
-              </div>
-              <span className="text-[#83D318] font-bold">:</span>
-              <div className="px-2.5 py-1 rounded-lg bg-[#10324B] border border-[#83D318]/40 shadow-sm flex items-baseline gap-1">
-                <span>{String(timeLeft.hours).padStart(2, '0')}</span>
-                <span className="font-nexa text-[9px] font-extrabold text-[#83D318] uppercase">Hrs</span>
-              </div>
-              <span className="text-[#83D318] font-bold">:</span>
-              <div className="px-2.5 py-1 rounded-lg bg-[#10324B] border border-[#83D318]/40 shadow-sm flex items-baseline gap-1">
-                <span>{String(timeLeft.minutes).padStart(2, '0')}</span>
-                <span className="font-nexa text-[9px] font-extrabold text-[#83D318] uppercase">Mins</span>
-              </div>
-              <span className="text-[#83D318] font-bold">:</span>
-              <div className="px-2.5 py-1 rounded-lg bg-[#10324B] border border-[#83D318]/40 shadow-sm flex items-baseline gap-1 text-[#83D318] animate-pulse">
-                <span>{String(timeLeft.seconds).padStart(2, '0')}</span>
-                <span className="font-nexa text-[9px] font-extrabold text-[#83D318] uppercase">Secs</span>
-              </div>
+              <CountdownUnit value={timeLeft.days} label="Days" />
+              <CountdownUnit value={timeLeft.hours} label="Hrs" />
+              <CountdownUnit value={timeLeft.minutes} label="Mins" />
+              <CountdownUnit value={timeLeft.seconds} label="Secs" highlight />
             </div>
 
-            {/* Right: Get Tickets CTA Button */}
-            <div className={`flex items-center gap-3 transition-all duration-500 transform ${
+            {/* Right: Get Tickets CTA Button (desktop) */}
+            <div className={`hidden md:flex items-center gap-3 transition-all duration-500 transform ${
               showTopNavCta
                 ? 'opacity-100 scale-100 pointer-events-auto translate-y-0'
                 : 'opacity-0 scale-90 pointer-events-none -translate-y-2'
@@ -440,142 +494,138 @@ export const Play4ImpactPage: React.FC = () => {
             </div>
 
           </div>
+
+          {/* Mobile: Get Tickets sticker "pasted" across the nav's bottom edge */}
+          <div className={`md:hidden absolute right-4 top-full -translate-y-2 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            showTopNavCta
+              ? 'opacity-100 scale-100 -rotate-3 pointer-events-auto'
+              : 'opacity-0 scale-75 rotate-6 pointer-events-none'
+          }`}>
+            <button
+              onClick={() => handleBuyTicket(ticketTiers[0])}
+              className="relative py-2 px-4 bg-[#83D318] text-[#10324B] font-nexa text-[11px] uppercase tracking-wider font-black rounded-lg border-2 border-[#10324B] shadow-[3px_3px_0_#10324B] flex items-center gap-1.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none transition-all cursor-pointer whitespace-nowrap"
+            >
+              {/* Tape strip holding the sticker to the nav */}
+              <span
+                aria-hidden="true"
+                className="absolute -top-2.5 left-1/2 -translate-x-1/2 rotate-6 w-11 h-4 bg-[#F1F9E5]/75 rounded-[2px] shadow-sm"
+              ></span>
+              <Ticket className="w-3.5 h-3.5 text-[#10324B]" />
+              <span>Get Tickets</span>
+            </button>
+          </div>
         </header>
         
         {/* HERO SECTION */}
-        <section className="relative min-h-[calc(100vh-80px)] flex items-center pt-12 pb-20 md:pt-20 md:pb-24 overflow-hidden bg-[#10324B]">
-          <div className="max-w-[1600px] w-full mx-auto px-6 sm:px-12 lg:px-16 xl:px-24">
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 xl:gap-28 items-center">
-              
-              {/* LEFT COLUMN */}
-              <div className="lg:col-span-6 space-y-6">
-                
-                <div className="flex flex-col gap-2 sm:gap-4 align-left pt-1">
-                  <h1 className="font-boldonse text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-black text-white tracking-tight leading-tight whitespace-nowrap drop-shadow-lg">
-                    Play. Connect.
-                  </h1>
-                  <h1 className="font-boldonse text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-black text-[#83D318] tracking-tight leading-tight drop-shadow-lg">
-                    Grow Impact
-                  </h1>
-                </div>
+        <section className="relative overflow-hidden bg-[#10324B] lg:min-h-[calc(100svh-76px)] lg:flex lg:flex-col">
+          {/* Padel court backdrop: landscape court on desktop, portrait court on mobile */}
+          <CourtBackdrop orientation="landscape" className="hidden lg:block" />
+          <CourtBackdrop orientation="portrait" className="lg:hidden" />
+          <div className="pointer-events-none absolute -right-32 top-1/4 w-[32rem] h-[32rem] rounded-full bg-[#83D318]/10 blur-3xl"></div>
 
-                <p className="font-nexa text-slate-200 text-base sm:text-lg font-normal leading-relaxed max-w-xl">
-                  PLAY4IMPACT is a premier tech lifestyle event presented by Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.
+          <div className="relative max-w-[1600px] w-full mx-auto px-6 sm:px-12 lg:px-16 xl:px-24 pt-16 pb-16 md:pt-20 md:pb-20 lg:py-12 lg:flex-1 flex items-center">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-20 lg:gap-20 xl:gap-28 items-center">
+
+              {/* LEFT COLUMN */}
+              <div className="lg:col-span-6 space-y-8">
+
+                {/* Eyebrow */}
+                {/* <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#005461]/70 border border-[#83D318]/40 font-nexa text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-slate-100">
+                  <span className="relative flex w-2 h-2">
+                    <span className="absolute inset-0 rounded-full bg-[#83D318] animate-ping opacity-75"></span>
+                    <span className="relative w-2 h-2 rounded-full bg-[#83D318]"></span>
+                  </span>
+                  Padel Edition · Accra 2026
+                </div> */}
+
+                <h1 className="font-boldonse flex flex-col gap-3 sm:gap-5 text-[min(calc((100vw_-_48px)/9.4),3rem)] sm:text-5xl lg:text-4xl xl:text-5xl 2xl:text-6xl text-white leading-[1.3] drop-shadow-lg">
+                  <span className="whitespace-nowrap">Play. Connect.</span>
+                  <span className="relative self-start text-[#83D318]">
+                    Grow Impact
+                    <svg
+                      aria-hidden="true"
+                      className="absolute left-0 -bottom-3 sm:-bottom-4 w-full h-3 sm:h-4"
+                      viewBox="0 0 400 16"
+                      preserveAspectRatio="none"
+                      fill="none"
+                    >
+                      <path d="M3 11 C 70 3, 140 3, 205 8 S 330 14, 397 5" stroke="#F1F9E5" strokeOpacity="0.45" strokeWidth="4" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </h1>
+
+                <p className="font-nexa text-slate-200 text-base sm:text-lg font-normal leading-relaxed max-w-xl pt-2">
+                  PLAY4IMPACT is a premier tech lifestyle event powered by Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.
                 </p>
 
                 {/* Date, Time & Venue Info Cards */}
                 <div className="pt-2">
-                  <div className="grid grid-cols-3 gap-2 sm:gap-4">
-                    
-                    {/* Event Date Card */}
-                    <div className="relative group cursor-pointer">
-                      <div
-                        className="absolute -inset-0.5 sm:-inset-1 bg-[#83D318] transform -rotate-1 opacity-90 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#96eb1e]"
-                        style={{
-                          clipPath: 'polygon(0% 12%, 32% 0%, 78% 8%, 100% 0%, 94% 88%, 100% 100%, 18% 92%, 0% 100%, 6% 48%)',
-                          WebkitClipPath: 'polygon(0% 12%, 32% 0%, 78% 8%, 100% 0%, 94% 88%, 100% 100%, 18% 92%, 0% 100%, 6% 48%)',
-                        }}
-                      ></div>
-                      <div
-                        className="relative p-2 sm:p-3.5 bg-[#005461] transition-transform duration-300 group-hover:bg-[#006878]"
-                        style={{
-                          clipPath: 'polygon(0% 12%, 32% 0%, 78% 8%, 100% 0%, 94% 88%, 100% 100%, 18% 92%, 0% 100%, 6% 48%)',
-                          WebkitClipPath: 'polygon(0% 12%, 32% 0%, 78% 8%, 100% 0%, 94% 88%, 100% 100%, 18% 92%, 0% 100%, 6% 48%)',
-                        }}
-                      >
-                        <div className="flex items-center gap-1.5 sm:gap-3">
-                          <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#83D318] text-[#10324B] flex items-center justify-center font-black shadow-md shrink-0">
-                            <Calendar className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-[#10324B]" />
-                          </div>
-                          <div className="min-w-0">
-                            <span className="font-nexa text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block truncate">
-                              Date
-                            </span>
-                            <span className="font-nexa text-[11px] sm:text-sm font-black text-white block truncate">
-                              Nov 7, 2026
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Event Time Card */}
-                    <div className="relative group cursor-pointer">
-                      <div
-                        className="absolute -inset-0.5 sm:-inset-1 bg-[#83D318] transform rotate-1 opacity-90 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#96eb1e]"
-                        style={{
-                          clipPath: 'polygon(2% 0%, 68% 6%, 100% 0%, 94% 85%, 100% 100%, 28% 94%, 0% 100%, 6% 12%)',
-                          WebkitClipPath: 'polygon(2% 0%, 68% 6%, 100% 0%, 94% 85%, 100% 100%, 28% 94%, 0% 100%, 6% 12%)',
-                        }}
-                      ></div>
-                      <div
-                        className="relative p-2 sm:p-3.5 bg-[#005461] transition-transform duration-300 group-hover:bg-[#006878]"
-                        style={{
-                          clipPath: 'polygon(2% 0%, 68% 6%, 100% 0%, 94% 85%, 100% 100%, 28% 94%, 0% 100%, 6% 12%)',
-                          WebkitClipPath: 'polygon(2% 0%, 68% 6%, 100% 0%, 94% 85%, 100% 100%, 28% 94%, 0% 100%, 6% 12%)',
-                        }}
-                      >
-                        <div className="flex items-center gap-1.5 sm:gap-3">
-                          <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#83D318]/20 border border-[#83D318]/60 text-[#83D318] flex items-center justify-center font-black shadow-md shrink-0">
-                            <Clock className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-                          </div>
-                          <div className="min-w-0">
-                            <span className="font-nexa text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block truncate">
-                              Time
-                            </span>
-                            <span className="font-nexa text-[11px] sm:text-sm font-black text-white block truncate">
-                              9:00 AM
-                            </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                    {[
+                      { label: 'Date', value: 'Nov 7, 2026', icon: Calendar },
+                      { label: 'Time', value: '9:00 AM', icon: Clock },
+                      { label: 'Venue', value: 'Rolider Sports', fullValue: 'Rolider Sports Complex, Shiashie', icon: MapPin },
+                    ].map((info) => {
+                      const InfoIcon = info.icon;
+                      return (
+                        <div key={info.label} className={`relative group ${info.fullValue ? 'col-span-2 sm:col-span-1' : ''}`}>
+                          <div className="absolute inset-0 translate-x-1 translate-y-1 rounded-xl sm:rounded-2xl bg-[#83D318] transition-transform duration-300 group-hover:translate-x-1.5 group-hover:translate-y-1.5"></div>
+                          <div className="relative h-full p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#005461] border border-[#83D318]/40 transition-all duration-300 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-[#006878]">
+                            <div className="flex items-center gap-2.5 sm:gap-3">
+                              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#83D318]/15 border border-[#83D318]/50 text-[#83D318] flex items-center justify-center shrink-0">
+                                <InfoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-nexa text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block truncate">
+                                  {info.label}
+                                </span>
+                                <span className="font-nexa text-sm font-black text-white block truncate" title={info.fullValue}>
+                                  {info.fullValue ? (
+                                    <>
+                                      <span className="sm:hidden">{info.fullValue}</span>
+                                      <span className="hidden sm:inline">{info.value}</span>
+                                    </>
+                                  ) : (
+                                    info.value
+                                  )}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Location Card */}
-                    <div className="relative group cursor-pointer">
-                      <div
-                        className="absolute -inset-0.5 sm:-inset-1 bg-[#83D318] transform -rotate-1 opacity-90 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#96eb1e]"
-                        style={{
-                          clipPath: 'polygon(0% 6%, 74% 0%, 100% 8%, 92% 88%, 100% 100%, 15% 94%, 0% 100%, 5% 52%)',
-                          WebkitClipPath: 'polygon(0% 6%, 74% 0%, 100% 8%, 92% 88%, 100% 100%, 15% 94%, 0% 100%, 5% 52%)',
-                        }}
-                      ></div>
-                      <div
-                        className="relative p-2 sm:p-3.5 bg-[#005461] transition-transform duration-300 group-hover:bg-[#006878]"
-                        style={{
-                          clipPath: 'polygon(0% 6%, 74% 0%, 100% 8%, 92% 88%, 100% 100%, 15% 94%, 0% 100%, 5% 52%)',
-                          WebkitClipPath: 'polygon(0% 6%, 74% 0%, 100% 8%, 92% 88%, 100% 100%, 15% 94%, 0% 100%, 5% 52%)',
-                        }}
-                      >
-                        <div className="flex items-center gap-1.5 sm:gap-3">
-                          <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#83D318]/20 border border-[#83D318]/60 text-[#83D318] flex items-center justify-center font-black shadow-md shrink-0">
-                            <MapPin className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-                          </div>
-                          <div className="min-w-0">
-                            <span className="font-nexa text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block truncate">
-                              Venue
-                            </span>
-                            <span className="font-nexa text-[11px] sm:text-sm font-black text-white block truncate" title="Rolider Sports Complex, Dzorwulu">
-                              Rolider Sports
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
+                      );
+                    })}
                   </div>
                 </div>
+
+                {/* Quick stats */}
+                {/* <div className="grid grid-cols-4 divide-x divide-white/10 pt-4">
+                  {[
+                    { value: '300+', label: 'Attendees' },
+                    { value: '50+', label: 'Investors' },
+                    { value: '20+', label: 'Startups' },
+                    { value: '4', label: 'Courts' },
+                  ].map((stat) => (
+                    <div key={stat.label} className="px-2 first:pl-0 sm:px-4">
+                      <span className="block font-boldonse text-base sm:text-2xl text-[#83D318] leading-tight">
+                        {stat.value}
+                      </span>
+                      <span className="block mt-1 font-nexa text-[9px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                        {stat.label}
+                      </span>
+                    </div>
+                  ))}
+                </div> */}
 
               </div>
 
               {/* RIGHT COLUMN */}
-              <div className="lg:col-span-6 space-y-6">
-                
+              <div className="lg:col-span-6">
+
                 <div className="relative group cursor-pointer">
-                  
+
                   <button
-                    ref={heroCtaRef}
+                    ref={setHeroCtaEl}
                     onClick={() => handleBuyTicket(ticketTiers[0])}
                     className="absolute -top-4 -right-2 sm:-top-5 sm:-right-4 z-20 py-3.5 px-6 sm:px-7 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-nexa text-base sm:text-lg uppercase tracking-wider font-black rounded-xl shadow-2xl border-2 border-[#10324B] flex items-center justify-center gap-2.5 transform rotate-3 hover:rotate-0 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
                   >
@@ -584,35 +634,10 @@ export const Play4ImpactPage: React.FC = () => {
                     <ArrowRight className="w-5 h-5 text-[#10324B]" />
                   </button>
 
-                  <div
-                    className="absolute -inset-3.5 bg-[#83D318] transform -rotate-4 opacity-95 transition-all duration-500 group-hover:-inset-7 group-hover:scale-[1.06] group-hover:-rotate-5 group-hover:shadow-[0_0_60px_rgba(131,211,24,0.85)] group-hover:bg-[#96eb1e]"
-                    style={{
-                      clipPath:
-                        'polygon(0% 14%, 28% 0%, 72% 8%, 100% 0%, 94% 80%, 100% 100%, 18% 92%, 0% 100%, 4% 48%)',
-                      WebkitClipPath:
-                        'polygon(0% 14%, 28% 0%, 72% 8%, 100% 0%, 94% 80%, 100% 100%, 18% 92%, 0% 100%, 4% 48%)',
-                    }}
-                  ></div>
+                  <div className="absolute inset-0 translate-x-3 translate-y-3 sm:translate-x-4 sm:translate-y-4 rounded-[2rem] bg-[#83D318] transition-all duration-500 group-hover:translate-x-5 group-hover:translate-y-5 group-hover:shadow-[0_0_60px_rgba(131,211,24,0.45)]"></div>
+                  <div className="absolute inset-0 -translate-x-3 -translate-y-3 sm:-translate-x-4 sm:-translate-y-4 rounded-[2rem] border-2 border-[#005461] transition-all duration-500 group-hover:-translate-x-5 group-hover:-translate-y-5 group-hover:border-[#83D318]/50"></div>
 
-                  <div
-                    className="absolute -inset-2 bg-[#005461] transform rotate-6 transition-all duration-500 group-hover:-inset-4 group-hover:scale-105 group-hover:rotate-8 group-hover:bg-[#006878]"
-                    style={{
-                      clipPath:
-                        'polygon(2% 18%, 24% 0%, 76% 4%, 98% 0%, 90% 86%, 100% 98%, 14% 96%, 0% 100%, 8% 52%)',
-                      WebkitClipPath:
-                        'polygon(2% 18%, 24% 0%, 76% 4%, 98% 0%, 90% 86%, 100% 98%, 14% 96%, 0% 100%, 8% 52%)',
-                    }}
-                  ></div>
-
-                  <div
-                    className="relative overflow-hidden w-full h-[360px] sm:h-[420px] shadow-2xl bg-[#005461]"
-                    style={{
-                      clipPath:
-                        'polygon(0% 16%, 26% 0%, 74% 6%, 100% 0%, 92% 84%, 100% 100%, 16% 94%, 0% 100%, 6% 50%)',
-                      WebkitClipPath:
-                        'polygon(0% 16%, 26% 0%, 74% 6%, 100% 0%, 92% 84%, 100% 100%, 16% 94%, 0% 100%, 6% 50%)',
-                    }}
-                  >
+                  <div className="relative overflow-hidden w-full h-[380px] sm:h-[460px] rounded-[2rem] shadow-2xl bg-[#005461] ring-1 ring-white/10">
                     <img
                       src="/images/p4i/rackets.jpg"
                       alt="Play 4 Impact Padel Championship"
@@ -620,32 +645,78 @@ export const Play4ImpactPage: React.FC = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#10324B]/95 via-black/20 to-transparent"></div>
 
-                    <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl bg-[#10324B]/90 backdrop-blur-md border border-white/10 flex items-center justify-between shadow-xl">
-                      <div>
+                    {/* Live matches chip */}
+                    {/* <div className="absolute top-16 sm:top-5 left-5 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#10324B]/85 backdrop-blur-md border border-white/15 font-nexa text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-white shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                      Live Padel Matches
+                    </div> */}
+
+                    <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl bg-[#10324B]/90 backdrop-blur-md border border-white/10 flex items-center justify-between gap-3 shadow-xl">
+                      <div className="min-w-0">
                         <span className="font-nexa text-[10px] uppercase tracking-wider text-[#83D318] font-bold block">
-                          Padel & Tech Lifestyle
+                          Africa's Tech Lifestyle
                         </span>
-                        <h3 className="font-nexa text-base font-bold text-white uppercase tracking-tight">
-                          Play 4 Impact Event 2026
+                        <h3 className="font-nexa text-sm sm:text-base font-bold text-white uppercase tracking-tight">
+                          Play4Impact 2026 - Padel Edition
                         </h3>
                       </div>
-                      
-                      <div className="w-9 h-9 rounded-full bg-[#83D318] text-[#10324B] flex items-center justify-center font-bold shadow-md">
+
+                      <div className="w-9 h-9 rounded-full bg-[#83D318] text-[#10324B] flex items-center justify-center font-bold shadow-md shrink-0">
                         <Trophy className="w-5 h-5" />
                       </div>
                     </div>
                   </div>
+
+                  {/* Floating experience chips (disabled for now) */}
+                  {/*
+                  <div className="hidden sm:flex absolute -left-8 top-[38%] z-10 animate-float items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#F1F9E5] text-[#10324B] shadow-2xl border-2 border-[#10324B] -rotate-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#83D318] flex items-center justify-center">
+                      <TrendingUp className="w-4 h-4" />
+                    </div>
+                    <div className="leading-tight">
+                      <span className="block font-nexa text-[10px] font-extrabold uppercase tracking-wider text-[#005461]">Investor Mixer</span>
+                      <span className="block font-nexa text-sm font-black">Investors & Networking</span>
+                    </div>
+                  </div>
+
+                  <div className="hidden sm:flex absolute -right-6 top-[58%] z-10 animate-float-delayed items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[#10324B] text-white shadow-2xl border-2 border-[#83D318] rotate-2">
+                    <div className="w-8 h-8 rounded-xl bg-[#83D318]/20 text-[#83D318] flex items-center justify-center">
+                      <HeartPulse className="w-4 h-4" />
+                    </div>
+                    <div className="leading-tight">
+                      <span className="block font-nexa text-[10px] font-extrabold uppercase tracking-wider text-[#83D318]">Wellness</span>
+                      <span className="block font-nexa text-sm font-black">Health Checks</span>
+                    </div>
+                  </div>
+                  */}
                 </div>
 
               </div>
 
             </div>
+          </div>
 
+          {/* Tilted marquee band */}
+          <div className="relative pb-10 pt-2">
+            <div className="-mx-4 -rotate-[1.5deg] bg-[#83D318] border-y-2 border-[#10324B] py-3 overflow-hidden shadow-[0_10px_40px_-10px_rgba(131,211,24,0.5)]">
+              <div className="animate-marquee-flow items-center">
+                {[0, 1].map((copy) => (
+                  <div key={copy} className="flex items-center shrink-0" aria-hidden={copy === 1}>
+                    {['Padel', 'Tech', 'Investors', 'Wellness', 'Networking', 'Impact', 'Padel', 'Tech', 'Investors', 'Wellness', 'Networking', 'Impact'].map((word, i) => (
+                      <span key={i} className="flex items-center font-boldonse text-sm sm:text-lg text-[#10324B] uppercase whitespace-nowrap">
+                        <span className="px-5 sm:px-7">{word}</span>
+                        <span className="text-[#10324B]/60">✦</span>
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
         {/* PILLARS / EXPERIENCE VISUAL HIGHLIGHTS */}
-        <section className="py-20 bg-[#0A1F2E] overflow-hidden relative">
+        <section id="highlights" className="py-20 bg-[#0A1F2E] overflow-hidden relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <EventHighlightsCarousel />
           </div>
@@ -749,7 +820,7 @@ export const Play4ImpactPage: React.FC = () => {
               <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                 Ecosystem Framework
               </span>
-              <h2 className="font-nexa text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
+              <h2 className="font-nexa pt-3 text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
                 The Five <span className="text-[#83D318]">Play4Impact Pillars</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
@@ -766,7 +837,6 @@ export const Play4ImpactPage: React.FC = () => {
                   desc: 'Physical wellness, active living, workplace health, and community building through sport.',
                   icon: HeartPulse,
                   focus: ['Physical Wellness', 'Active Living', 'Workplace Health', 'Recreational Sport'],
-                  color: 'from-emerald-500/20 to-[#005461]',
                 },
                 {
                   number: '02',
@@ -774,7 +844,6 @@ export const Play4ImpactPage: React.FC = () => {
                   desc: 'Artificial intelligence, digital transformation, tech careers, ecosystems, and future of work.',
                   icon: Zap,
                   focus: ['Artificial Intelligence', 'Digital Transformation', 'Tech Careers', 'Digital Skills'],
-                  color: 'from-sky-500/20 to-[#005461]',
                 },
                 {
                   number: '03',
@@ -782,7 +851,6 @@ export const Play4ImpactPage: React.FC = () => {
                   desc: 'Entrepreneurship, wealth building, investment readiness, career development, and business growth.',
                   icon: Crown,
                   focus: ['Entrepreneurship', 'Wealth Building', 'Investment Readiness', 'Business Growth'],
-                  color: 'from-amber-500/20 to-[#005461]',
                 },
                 {
                   number: '04',
@@ -790,7 +858,6 @@ export const Play4ImpactPage: React.FC = () => {
                   desc: 'Social impact, youth empowerment, community development, volunteerism, and sustainability.',
                   icon: Users,
                   focus: ['Social Impact', 'Youth Empowerment', 'Sustainability', 'Leadership'],
-                  color: 'from-indigo-500/20 to-[#005461]',
                 },
                 {
                   number: '05',
@@ -798,48 +865,51 @@ export const Play4ImpactPage: React.FC = () => {
                   desc: 'Strategic partnerships, diaspora engagement, international collaboration, and knowledge exchange.',
                   icon: Globe,
                   focus: ['Diaspora Engagement', 'Global Talent', 'Investment Promotion', 'Cross-Border Deals'],
-                  color: 'from-teal-500/20 to-[#005461]',
                 },
               ].map((pillar, idx) => {
                 const IconComponent = pillar.icon;
                 return (
                   <div
                     key={idx}
-                    className="relative rounded-3xl p-6 bg-gradient-to-b from-[#005461]/80 to-[#10324B] border border-[#005461] hover:border-[#83D318]/70 shadow-xl transition-all hover:-translate-y-2 flex flex-col justify-between group"
+                    className="group relative flex flex-col overflow-hidden rounded-3xl p-6 bg-[#10324B] border border-white/10 shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:border-[#83D318]/60"
                   >
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-2xl font-black text-[#83D318] opacity-80">
-                          {pillar.number}
-                        </span>
-                        <div className="w-10 h-10 rounded-2xl bg-[#83D318]/20 border border-[#83D318]/40 text-[#83D318] flex items-center justify-center font-bold shadow-sm group-hover:bg-[#83D318] group-hover:text-[#10324B] transition-colors">
-                          <IconComponent className="w-5 h-5" />
-                        </div>
-                      </div>
+                    {/* Lime accent bar that extends on hover */}
+                    <span className="absolute inset-x-0 top-0 h-1 bg-[#83D318] origin-left scale-x-25 transition-transform duration-500 group-hover:scale-x-100"></span>
 
-                      <div>
-                        <h3 className="font-nexa text-lg font-black text-white uppercase tracking-tight">
-                          {pillar.title}
-                        </h3>
-                        <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                          {pillar.desc}
-                        </p>
-                      </div>
+                    {/* Oversized pillar number watermark */}
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none select-none absolute -right-1 -bottom-5 font-boldonse text-8xl leading-none text-white/[0.04] transition-colors duration-300 group-hover:text-[#83D318]/[0.08]"
+                    >
+                      {pillar.number}
+                    </span>
 
-                      <div className="pt-2 border-t border-white/10 space-y-1.5">
-                        <span className="text-[10px] font-bold text-[#83D318] uppercase tracking-wider block">
-                          Key Focus Areas:
-                        </span>
-                        <ul className="space-y-1">
-                          {pillar.focus.map((item, fIdx) => (
-                            <li key={fIdx} className="text-[11px] text-slate-200 flex items-center gap-1.5">
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#83D318] shrink-0"></span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
+                    <div className="relative flex items-center justify-between">
+                      <div className="w-12 h-12 rounded-2xl bg-[#83D318] text-[#10324B] flex items-center justify-center shadow-[0_8px_24px_-8px_rgba(131,211,24,0.6)] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
+                        <IconComponent className="w-5 h-5" />
                       </div>
+                      <span className="font-nexa text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                        Pillar {pillar.number}
+                      </span>
                     </div>
+
+                    <h3 className="relative mt-6 font-nexa text-lg font-black text-white uppercase tracking-tight leading-snug">
+                      {pillar.title}
+                    </h3>
+                    <p className="relative mt-2 text-sm text-slate-300 leading-relaxed">
+                      {pillar.desc}
+                    </p>
+
+                    <ul className="relative mt-auto pt-6 flex flex-wrap gap-1.5">
+                      {pillar.focus.map((item, fIdx) => (
+                        <li
+                          key={fIdx}
+                          className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-slate-200 transition-colors group-hover:border-[#83D318]/30"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 );
               })}
@@ -860,16 +930,16 @@ export const Play4ImpactPage: React.FC = () => {
                   Who Attends <span className="text-[#83D318]">Play 4 Impact?</span>
                 </h2>
                 <p className="text-slate-200 text-base leading-relaxed">
-                  The event brings together approximately <strong>300+ carefully curated participants</strong> from Ghana, West Africa, and global diaspora networks to share ideas, build strategic partnerships, and collaborate around common goals.
+                  The event brings together <strong>300+ participants</strong> from Ghana, West Africa, and global diaspora networks: seasoned executives and investors, everyday tech professionals, and people just starting out in tech. Everyone comes to share ideas, build partnerships, and grow together.
                 </p>
 
                 <div className="p-6 rounded-2xl bg-[#005461]/60 border border-[#83D318]/40 shadow-xl space-y-3">
                   <div className="flex items-center gap-3">
                     <Trophy className="w-6 h-6 text-[#83D318]" />
-                    <h4 className="font-nexa text-lg font-black text-white uppercase">High-Curated Network</h4>
+                    <h4 className="font-nexa text-lg font-black text-white uppercase">Open To The Whole Tech Community</h4>
                   </div>
                   <p className="text-xs text-slate-200 leading-relaxed">
-                    From tech founders to VC partners, corporate titans, and government representatives—Play4Impact creates an organic, high-energy environment for dealmaking and lifelong connections.
+                    Whether you're a founder, a VC partner, a developer shipping code every day, or someone curious about breaking into tech, Play4Impact creates an organic, high-energy space for real conversations and lifelong connections.
                   </p>
                 </div>
               </div>
@@ -883,6 +953,8 @@ export const Play4ImpactPage: React.FC = () => {
                     { title: 'Diaspora Professionals', desc: 'Global Ghanaian & African diaspora stakeholders driving investment & talent.', icon: Globe },
                     { title: 'Government & Public Sector', desc: 'Policy makers, innovation hubs & public sector representatives.', icon: Building2 },
                     { title: 'Emerging Talent & Leaders', desc: 'Future tech leaders, innovators & high-potential ecosystem changemakers.', icon: Award },
+                    { title: 'Tech Professionals', desc: 'Developers, designers, product managers, data & IT pros building careers in tech.', icon: Laptop },
+                    { title: 'Beginners & Tech Enthusiasts', desc: 'Students, career switchers & anyone curious about tech. No experience needed.', icon: Seedling },
                   ].map((group, idx) => {
                     const GroupIcon = group.icon;
                     return (
@@ -919,11 +991,11 @@ export const Play4ImpactPage: React.FC = () => {
               <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                 Ecosystem Support
               </span>
-              <h2 className="font-nexa text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
+              <h2 className="font-nexa text-3xl pt-3 sm:text-5xl font-black text-white uppercase tracking-tight">
                 Event Partners & <span className="text-[#83D318]">Sponsors</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
-                Supported by premier government institutions, global brands, wellness leaders, and West Africa’s top media platforms.
+                Supported by premier government institutions, global brands, wellness leaders, and media platforms.
               </p>
             </div>
 
@@ -933,43 +1005,20 @@ export const Play4ImpactPage: React.FC = () => {
               <div className="absolute top-0 bottom-0 right-0 w-24 z-10 bg-gradient-to-l from-[#0B1E2B] via-[#0B1E2B]/80 to-transparent pointer-events-none" />
 
               <div className="animate-marquee-flow flex gap-5 items-center">
-                {[
-                  { name: 'Diaspora Affairs', category: 'Office of the President', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
-                  { name: 'Ghana Fintech', category: '& Payments Association', logo: '/images/p4i/sponsors/ghana-fintech.png' },
-                  { name: 'R&R Wellness', category: 'Luxury Partner', logo: '/images/p4i/sponsors/rr-wellness.png' },
-                  { name: 'Lyvv Cosmetics', category: 'Beauty & Wellness', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
-                  { name: 'Media For Us', category: 'Media & Production', logo: '/images/p4i/sponsors/media-for-us.png' },
-                  { name: 'YFM Ghana', category: 'Radio Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
-                  { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
-                  { name: 'Stella Artois', category: 'Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
-                  { name: 'Decathlon', category: 'Sports & Apparel', logo: '/images/p4i/sponsors/decathlon.svg' },
-                  { name: 'Rivia Clinics', category: 'Health & Wellness', logo: '/images/p4i/sponsors/rivia-clinics.png' },
-                  { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.svg' },
-                  { name: 'MX24 TV', category: 'Television Partner', logo: '/images/p4i/sponsors/mx24-tv.svg' },
-                  { name: 'B&FT', category: 'Business Newspaper', logo: '/images/p4i/sponsors/bft.png' },
-                  // Duplicated for seamless loop
-                  { name: 'Diaspora Affairs', category: 'Office of the President', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
-                  { name: 'Ghana Fintech', category: '& Payments Association', logo: '/images/p4i/sponsors/ghana-fintech.png' },
-                  { name: 'R&R Wellness', category: 'Luxury Partner', logo: '/images/p4i/sponsors/rr-wellness.png' },
-                  { name: 'Lyvv Cosmetics', category: 'Beauty & Wellness', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
-                  { name: 'Media For Us', category: 'Media & Production', logo: '/images/p4i/sponsors/media-for-us.png' },
-                  { name: 'YFM Ghana', category: 'Radio Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
-                  { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
-                  { name: 'Stella Artois', category: 'Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
-                  { name: 'Decathlon', category: 'Sports & Apparel', logo: '/images/p4i/sponsors/decathlon.svg' },
-                  { name: 'Rivia Clinics', category: 'Health & Wellness', logo: '/images/p4i/sponsors/rivia-clinics.png' },
-                  { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.svg' },
-                  { name: 'MX24 TV', category: 'Television Partner', logo: '/images/p4i/sponsors/mx24-tv.svg' },
-                  { name: 'B&FT', category: 'Business Newspaper', logo: '/images/p4i/sponsors/bft.png' },
-                ].map((sponsor, sIdx) => (
+                {[...eventPartners, ...eventPartners].map((sponsor, sIdx) => (
                   <div
                     key={sIdx}
                     className="w-56 sm:w-64 shrink-0 p-4 rounded-3xl bg-[#004753]/50 border border-white/10 hover:border-[#83D318]/70 transition-all duration-300 flex flex-col items-center justify-between text-center space-y-3 shadow-xl backdrop-blur-md group hover:bg-[#005461]/80 hover:-translate-y-1 cursor-pointer"
                   >
-                    <div className="w-full h-20 bg-white rounded-2xl p-3 flex items-center justify-center shadow-inner group-hover:scale-[1.03] transition-transform duration-300 overflow-hidden border border-slate-100">
+                    <div
+                      className={`w-full h-24 rounded-2xl px-4 py-3 flex items-center justify-center shadow-inner group-hover:scale-[1.03] transition-transform duration-300 overflow-hidden border ${
+                        sponsor.darkTile ? 'bg-[#10324B] border-white/10' : 'bg-white border-slate-100'
+                      }`}
+                    >
                       <img
                         src={sponsor.logo}
                         alt={sponsor.name}
+                        loading="lazy"
                         className="max-h-full max-w-full object-contain"
                       />
                     </div>
@@ -1004,7 +1053,7 @@ export const Play4ImpactPage: React.FC = () => {
                     Let’s Play4Impact <span className="text-[#83D318]">Together!</span>
                   </h3>
                   <p className="text-slate-200 text-sm leading-relaxed">
-                    Interested in sponsoring, hosting a startup demo booth, or securing corporate player slots for your company? Reach out directly to our Partnership & Growth team.
+                    Interested in sponsoring, hosting a startup demo booth, or securing corporate player slots for your company? Fill out our quick partnership form. It takes about 2 minutes, and our Partnership & Growth team will get back to you.
                   </p>
                 </div>
 
@@ -1035,10 +1084,11 @@ export const Play4ImpactPage: React.FC = () => {
                   </div>
 
                   <a
-                    href="mailto:techies4impact@gmail.com?subject=Play4Impact%20Partnership%20Inquiry"
+                    href={PARTNERSHIP_FORM_URL || PARTNERSHIP_MAILTO}
+                    {...(PARTNERSHIP_FORM_URL ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     className="w-full py-3 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-nexa text-xs font-black uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-105"
                   >
-                    <span>Inquire for Partnership</span>
+                    <span>Become a Partner</span>
                     <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
@@ -1101,13 +1151,13 @@ export const Play4ImpactPage: React.FC = () => {
               />
               <div>
                 <p className="font-bold text-white text-sm uppercase">PLAY4IMPACT 2026</p>
-                <p className="text-slate-300">Presented by Techies4Impact & Seventh Creative • Accra, Ghana</p>
+                <p className="text-slate-300">Powered by Techies4Impact • Accra, Ghana</p>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-6 font-semibold text-slate-200">
               <a href="#tickets" className="hover:text-[#83D318] transition-colors">Tickets & Passes</a>
-              <a href="#about-event" className="hover:text-[#83D318] transition-colors">Event Highlights</a>
+              <a href="#highlights" className="hover:text-[#83D318] transition-colors">Event Highlights</a>
               <a href="/terms" className="hover:text-[#83D318] transition-colors">Terms of Service</a>
               <a href="/privacy" className="hover:text-[#83D318] transition-colors">Privacy Policy</a>
               <a href="/refunds" className="hover:text-[#83D318] transition-colors">Refunds Policy</a>
@@ -1115,7 +1165,7 @@ export const Play4ImpactPage: React.FC = () => {
 
             <div className="text-center md:text-right text-slate-300 text-[11px]">
               <p>© 2026 Techies4Impact. All Rights Reserved.</p>
-              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Rolider Sports Complex, Dzorwulu - Accra</p>
+              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Rolider Sports Complex, Shiashie - Accra</p>
             </div>
 
           </div>

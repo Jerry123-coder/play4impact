@@ -17,20 +17,49 @@
   --box-shadow-glow-sm: 0 0 15px 0 rgba(88, 166, 255, 0.3);
   --box-shadow-glow-md: 0 0 25px 0 rgba(88, 166, 255, 0.4);
   --box-shadow-glow-lime: 0 0 25px 0 rgba(131, 211, 24, 0.4);
+
+  /* Nexa is the default text face across the page */
+  --font-sans: 'Nexa', 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 @font-face {
   font-family: "Nexa";
-  src: url("/src/assets/fonts/Nexa-Regular.ttf") format("truetype");
-  font-weight: normal;
+  src: url("/src/assets/fonts/Nexa-Thin.ttf") format("truetype");
+  font-weight: 100;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/src/assets/fonts/Nexa-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/src/assets/fonts/Nexa-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Nexa";
   src: url("/src/assets/fonts/Nexa-Bold.ttf") format("truetype");
-  font-weight: bold;
+  font-weight: 700;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("/src/assets/fonts/Nexa-XBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -38,10 +67,13 @@
   src: url("/src/assets/fonts/Nexa-Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
+  font-display: swap;
 }
 
+/* Hero display headings — Boldonse ships a single (400) weight, so never faux-bold it */
 .font-boldonse {
-  font-family: 'Outfit', 'Boldonse', 'Impact', sans-serif;
+  font-family: 'Boldonse', 'Impact', sans-serif;
+  font-weight: 400;
 }
 
 .font-nexa {
@@ -50,6 +82,11 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Keep anchored sections clear of the sticky header */
+section[id] {
+  scroll-margin-top: 72px;
 }
 
 .fade-in-section {
@@ -101,4 +138,30 @@ html {
 
 .animate-marquee-reverse-flow:hover {
   animation-play-state: paused;
+}
+
+@keyframes float-y {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float-y 5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-y 5s ease-in-out -2.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-marquee-flow,
+  .animate-marquee-reverse-flow {
+    animation: none;
+  }
 }

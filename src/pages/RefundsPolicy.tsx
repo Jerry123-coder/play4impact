@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { FaArrowLeft as ArrowLeft } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
 const RefundsPolicy: React.FC = () => {
