@@ -12,68 +12,10 @@ import {
   FaCheck as Check,
 } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
+import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
+import { findPromoCode } from '../data/promoCodes';
 
-export interface TicketTier {
-  id: string;
-  name: string;
-  price: number; // in GHS
-  tagline: string;
-  badge?: string;
-  features: string[];
-  popular?: boolean;
-  color?: 'green' | 'blue' | 'red' | 'amber' | string;
-}
-
-export const defaultTicketTiers: TicketTier[] = [
-  {
-    id: 'basic',
-    name: 'General Pass',
-    price: 250,
-    tagline: 'Basic',
-    features: [
-      'Complimentary beverages (Drinks & Water',
-      'Access to watch padel matches',
-      'Access to partner / innovation zones',
-      'Access to Health checks',
-    ],
-    color: 'green',
-  },
-  {
-    id: 'standard',
-    name: 'Premium Pass',
-    price: 500,
-    popular: true,
-    badge: 'MOST POPULAR',
-    tagline: 'Standard',
-    features: [
-      'Complimentary beverages (Drinks & Water',
-      'Access to watch padel matches',
-      'Access to partner / innovation zones',
-      'Access to health checks',
-      'Automatic member of P4I Clubhouse',
-      'Access to Champions and Investor mixer',
-    ],
-    color: 'blue',
-  },
-  {
-    id: 'deluxe',
-    name: 'Deluxe Pass',
-    price: 950,
-    tagline: 'Priority red-carpet experience, R&R wellness treat & souvenirs.',
-    features: [
-      'Priority check-in',
-      'Complimentary beverages (Drinks & Water)',
-      'Priority access to watch padel matches',
-      'Access to partner / innovation zones',
-      'Access to health checks',
-      'Priority Access to Champions and Investor mixer',
-      'Automatic member of P4I Clubhouse',
-      'Wellness treat by R&R',
-      'P4I Lifestyle souvenir',
-    ],
-    color: 'amber',
-  },
-];
+export type { TicketTier };
 
 interface PaystackCheckoutModalProps {
   isOpen: boolean;
@@ -103,7 +45,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
   isOpen,
   onClose,
   selectedTier: initialSelectedTier,
-  allTiers = defaultTicketTiers,
+  allTiers = ticketTiers,
 }) => {
   const [currentTier, setCurrentTier] = useState<TicketTier>(
     initialSelectedTier || allTiers[0]
@@ -117,6 +59,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
   const [discountPercent, setDiscountPercent] = useState(0);
+  const [promoCommunity, setPromoCommunity] = useState<string | null>(null);
 
   // Ticket Gifting State
   const [isGift, setIsGift] = useState(false);
@@ -137,6 +80,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
     email: string;
     phone: string;
     quantity: number;
+    people: number;
     isGift?: boolean;
     recipientName?: string;
     recipientEmail?: string;
@@ -166,19 +110,23 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
   const subtotal = currentTier.price * quantity;
   const discountAmount = discountPercent > 0 ? Math.round((subtotal * discountPercent) / 100) : 0;
   const totalAmount = Math.max(0, subtotal - discountAmount);
+  const totalPeople = peopleAdmitted(currentTier) * quantity;
 
-  const handleApplyPromo = (e?: React.FormEvent) => {
+  const handleApplyPromo = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const clean = promoCode.trim().toUpperCase();
     if (!clean) {
       setAppliedPromo(null);
       setDiscountPercent(0);
+      setPromoCommunity(null);
       return;
     }
-    if (['PLAY26', 'COMMUNITY26', 'PARTNER26', 'P4ICOMMUNITY26'].includes(clean)) {
+    const promo = await findPromoCode(clean);
+    if (promo) {
       setAppliedPromo(clean);
-      setDiscountPercent(12);
-      toast.success(`Promo code ${clean} applied! 12% discount active.`);
+      setDiscountPercent(promo.percent);
+      setPromoCommunity(promo.community);
+      toast.success(`${promo.community} code applied! ${promo.percent}% off.`);
     } else {
       toast.error('Invalid promo code.');
     }
@@ -188,6 +136,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
     setAppliedPromo(null);
     setPromoCode('');
     setDiscountPercent(0);
+    setPromoCommunity(null);
     toast('Promo code removed.');
   };
 
@@ -234,6 +183,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
         email: email,
         phone: phone,
         quantity: quantity,
+        people: totalPeople,
         isGift: isGift,
         recipientName: isGift ? recipientName : undefined,
         recipientEmail: isGift ? recipientEmail : undefined,
@@ -256,7 +206,11 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
               { display_name: 'Phone Number', variable_name: 'phone_number', value: phone },
               { display_name: 'Ticket Tier', variable_name: 'ticket_tier', value: currentTier.name },
               { display_name: 'Quantity', variable_name: 'quantity', value: quantity },
-              ...(appliedPromo ? [{ display_name: 'Promo Code', variable_name: 'promo_code', value: appliedPromo }] : []),
+              { display_name: 'People Admitted', variable_name: 'people_admitted', value: totalPeople },
+              ...(appliedPromo ? [
+                { display_name: 'Promo Code', variable_name: 'promo_code', value: appliedPromo },
+                { display_name: 'Community', variable_name: 'promo_community', value: promoCommunity },
+              ] : []),
               ...(isGift ? [
                 { display_name: 'Purchased As Gift', variable_name: 'is_gift', value: 'Yes' },
                 { display_name: 'Recipient Name', variable_name: 'recipient_name', value: recipientName },
@@ -453,7 +407,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                       </h4>
                     </div>
                     <div className="px-3 py-1 bg-[#83D318] text-[#10324B] font-nexa text-xs font-black rounded-lg uppercase shadow-sm">
-                      {quantity}x Pass
+                      {quantity}x Pass{totalPeople > quantity ? ` · Admits ${totalPeople}` : ''}
                     </div>
                   </div>
 
@@ -466,7 +420,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                     )}
                     {discountAmount > 0 && (
                       <div className="flex items-center justify-between text-xs text-[#83D318] font-bold">
-                        <span>Community Partner Discount ({discountPercent}% off - {appliedPromo}):</span>
+                        <span>{promoCommunity} Discount ({discountPercent}% off - {appliedPromo}):</span>
                         <span>-{discountAmount.toLocaleString()} GHS</span>
                       </div>
                     )}
@@ -522,7 +476,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                       </span>
                       {appliedPromo && (
                         <span className="text-[10px] font-black text-[#009B55] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                          12% Discount Active ({appliedPromo})
+                          {discountPercent}% Off · {promoCommunity}
                         </span>
                       )}
                     </div>
@@ -740,7 +694,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-start justify-between border-b border-white/15 pb-4 gap-4">
                 <div>
                   <span className="px-3 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-lg uppercase tracking-wider inline-block">
-                    {ticketIssued.tier} ({ticketIssued.quantity}x)
+                    {ticketIssued.tier} ({ticketIssued.quantity}x){ticketIssued.people > ticketIssued.quantity ? ` · Admits ${ticketIssued.people}` : ''}
                   </span>
                   <h4 className="text-3xl font-nexa font-black text-white tracking-tight mt-2">
                     PLAY 4 IMPACT 2026
@@ -800,10 +754,10 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                 </div>
                 <div className="text-xs text-slate-300 space-y-1">
                   <span className="font-bold text-white block text-sm">
-                    Rolider Sports Complex Gate Entry Pass
+                    Padel Zone Gate Entry Pass
                   </span>
                   <p className="text-[11px] text-slate-300">
-                    Present this pass reference or digital code at the Rolider Sports Complex gate in Shiashie - Accra for entry.
+                    Present this pass reference or digital code at the Padel Zone gate in Labone - Accra for entry.
                   </p>
                 </div>
               </div>

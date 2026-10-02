@@ -26,68 +26,18 @@ import {
   FaLaptopCode as Laptop,
   // FaSeedling as Seedling, // re-enable with the "Beginners & Tech Enthusiasts" audience card
 } from 'react-icons/fa6';
-import { PaystackCheckoutModal, type TicketTier } from '../components/PaystackCheckoutModal';
+import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
+import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
 
 // Google Form for partnership sign-ups. Paste the form's share link here;
 // until then the partnership button falls back to email.
-const PARTNERSHIP_FORM_URL = '';
+const PARTNERSHIP_FORM_URL = 'https://forms.gle/wgTvpzg8ocVc3StS9';
 const PARTNERSHIP_MAILTO = 'mailto:techies4impact@gmail.com?subject=Play4Impact%20Partnership%20Inquiry';
-
-export const ticketTiers: TicketTier[] = [
-  {
-    id: 'basic',
-    name: 'General Pass',
-    price: 250,
-    tagline: 'Basic',
-    features: [
-      'Complimentary beverages (Drinks & Water)',
-      'Access to watch padel matches (All attendees)',
-      'Access to partner / innovation zones',
-      'Access to Health checks',
-    ],
-    color: 'green',
-  },
-  {
-    id: 'standard',
-    name: 'Premium Pass',
-    price: 500,
-    popular: true,
-    badge: 'MOST POPULAR',
-    tagline: 'Standard',
-    features: [
-      'Complimentary beverages (Drinks & Water)',
-      'Access to watch padel matches',
-      'Access to partner / innovation zones',
-      'Access to health checks',
-      'Automatic member of P4I Clubhouse',
-      'Access to Champions and Investor mixer',
-    ],
-    color: 'blue',
-  },
-  {
-    id: 'deluxe',
-    name: 'Deluxe Pass',
-    price: 950,
-    tagline: 'Priority red-carpet experience, R&R wellness treat & souvenirs.',
-    features: [
-      'Priority check-in',
-      'Complimentary beverages (Drinks & Water)rinks & Water)',
-      'Priority access to watch padel matches',
-      'Access to partner / innovation zones',
-      'Access to health checks',
-      'Priority Access to Champions and Investor mixer',
-      'Automatic member of P4I Clubhouse',
-      'Wellness treat by R&R',
-      'P4I Lifestyle souvenir',
-    ],
-    color: 'amber',
-  },
-];
 
 const faqs = [
   {
     q: 'What is Play 4 Impact?',
-    a: 'PLAY4IMPACT is a premier tech lifestyle event powered Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.',
+    a: 'PLAY4IMPACT is a premier tech lifestyle event powered by Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.',
   },
   {
     q: 'Can I participate in the Padel matches or watch?',
@@ -98,12 +48,16 @@ const faqs = [
     a: 'Payments are processed securely via Paystack API (Mobile Money or Bank Cards in GHS). Upon successful payment, an instant digital gate pass with a unique reference code will be generated for you.',
   },
   {
-    q: ' What is the P4I Clubhouse?',
+    q: 'What is the P4I Clubhouse?',
     a: 'P4I Clubhouse is a curated community of tech, corporate and sports lifestyle individuals. Approved members benefit from early updates, exclusive discounts and new developments within the Play4Impact ecosystem. Membership is by application. Deluxe Pass holders also receive a signature wellness treat curated by The Wellness Place by R&R, Accra’s members-only wellness club.',
   },
   {
     q: 'Where and when is the event taking place?',
-    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Rolider Sports Complex, Shiashie - Accra, Ghana.',
+    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Padel Zone, Labone - Accra, Ghana.',
+  },
+  {
+    q: 'Will food be provided?',
+    a: 'Your ticket includes complimentary drinks and water. Food will be available for purchase from our food vendors.',
   },
 ];
 
@@ -112,14 +66,14 @@ const faqs = [
 const eventPartners: { name: string; category: string; logo: string; darkTile?: boolean }[] = [
   { name: 'Diaspora Affairs', category: 'Office of the President', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
   { name: 'Ghana Fintech', category: '& Payments Association', logo: '/images/p4i/sponsors/ghana-fintech.png' },
-  { name: 'The Wellness Place by R&R', category: 'Wellness Partner', logo: '/images/p4i/sponsors/the-wellness-place-rr.png' },
+  { name: 'R&R Wellness', category: 'Official Wellness Partner', logo: '/images/p4i/sponsors/rr-wellness-logo.png' },
   { name: 'Lyvv Cosmetics', category: 'Beauty & Wellness', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
   { name: 'Media For Us', category: 'Media & Production', logo: '/images/p4i/sponsors/media-for-us.png' },
   { name: 'YFM Ghana', category: 'Radio Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
   { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
   { name: 'Stella Artois', category: 'Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
   { name: 'Decathlon', category: 'Sports & Apparel', logo: '/images/p4i/sponsors/decathlon.svg' },
-  { name: 'Rivia Clinics', category: 'Health & Wellness', logo: '/images/p4i/sponsors/rivia-clinics.png' },
+  { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
   { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.png', darkTile: true },
   { name: 'MX24 TV', category: 'Television Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
   { name: 'B&FT', category: 'Business Newspaper', logo: '/images/p4i/sponsors/bft.png' },
@@ -446,6 +400,75 @@ export const Play4ImpactPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const renderTierCard = (tier: TicketTier) => (
+    <div
+      key={tier.id}
+      className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${
+        tier.popular
+          ? 'bg-[#005461] border-2 border-[#83D318] shadow-2xl'
+          : 'bg-[#0A1F2E] border border-[#005461] hover:border-[#83D318]/40'
+      }`}
+    >
+      {/* Badge */}
+      {tier.badge && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-wider shadow-md">
+          {tier.badge}
+        </div>
+      )}
+
+      <div className="space-y-6">
+        <div>
+          <h3 className="font-nexa text-2xl font-black text-white uppercase">
+              {/* "General Pass (Triple Treat)" -> name + lime subtitle */}
+              {tier.name.replace(/\s*\(.*\)$/, '')}
+              {tier.name.match(/\((.*)\)$/) && (
+                <span className="block mt-1 text-lg text-[#83D318]">{tier.name.match(/\((.*)\)$/)![1]}</span>
+              )}
+            </h3>
+          <p className="text-xs text-slate-300 mt-2 min-h-[36px]">{tier.tagline}</p>
+        </div>
+
+        <div className="pt-2 border-t border-white/10 flex items-baseline gap-2">
+          <span className="text-4xl sm:text-5xl font-black text-[#83D318]">
+            {tier.price}
+          </span>
+          <span className="text-lg font-bold text-slate-300">GHS</span>
+          <span className="text-xs text-slate-400">
+          / {peopleAdmitted(tier) > 1 ? `${peopleAdmitted(tier)} people` : 'person'}
+        </span>
+        </div>
+
+        <div className="space-y-3 pt-2">
+          <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">
+            What's Included:
+          </span>
+          <ul className="space-y-2.5">
+            {tier.features.map((feat, idx) => (
+              <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-200">
+                <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-0.5" />
+                <span>{feat}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="pt-8">
+        <button
+          onClick={() => handleBuyTicket(tier)}
+          className={`w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer ${
+            tier.popular
+              ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] hover:scale-105'
+              : 'bg-[#005461] hover:bg-[#006f80] text-white hover:scale-105'
+          }`}
+        >
+          <span>Buy Ticket</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#10324B] text-slate-100 font-sans selection:bg-[#83D318] selection:text-[#10324B]">
       {/* Dynamic Background Noise / Glow Accents */}
@@ -576,7 +599,7 @@ stakeholders, and emerging changemakers.
                     {[
                       { label: 'Date', value: 'Nov 7, 2026', icon: Calendar },
                       { label: 'Time', value: '9:00 AM', icon: Clock },
-                      { label: 'Venue', value: 'Rolider Sports', fullValue: 'Rolider Sports Complex, Shiashie', icon: MapPin },
+                      { label: 'Venue', value: 'Padel Zone', fullValue: 'Padel Zone, Labone', icon: MapPin },
                     ].map((info) => {
                       const InfoIcon = info.icon;
                       return (
@@ -758,68 +781,20 @@ stakeholders, and emerging changemakers.
               </div> */}
             </div>
 
-            {/* Pricing Cards Grid */}
+            {/* Pricing Cards Grid: single passes */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-              {ticketTiers.map((tier) => (
-                <div
-                  key={tier.id}
-                  className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${
-                    tier.popular
-                      ? 'bg-[#005461] border-2 border-[#83D318] shadow-2xl'
-                      : 'bg-[#0A1F2E] border border-[#005461] hover:border-[#83D318]/40'
-                  }`}
-                >
-                  {/* Badge */}
-                  {tier.badge && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-wider shadow-md">
-                      {tier.badge}
-                    </div>
-                  )}
+              {ticketTiers.filter((tier) => peopleAdmitted(tier) === 1).map(renderTierCard)}
+            </div>
 
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="font-nexa text-2xl font-black text-white uppercase">{tier.name}</h3>
-                      <p className="text-xs text-slate-300 mt-2 min-h-[36px]">{tier.tagline}</p>
-                    </div>
-
-                    <div className="pt-2 border-t border-white/10 flex items-baseline gap-2">
-                      <span className="text-4xl sm:text-5xl font-black text-[#83D318]">
-                        {tier.price}
-                      </span>
-                      <span className="text-lg font-bold text-slate-300">GHS</span>
-                      <span className="text-xs text-slate-400">/ person</span>
-                    </div>
-
-                    <div className="space-y-3 pt-2">
-                      <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">
-                        What's Included:
-                      </span>
-                      <ul className="space-y-2.5">
-                        {tier.features.map((feat, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-200">
-                            <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-0.5" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="pt-8">
-                    <button
-                      onClick={() => handleBuyTicket(tier)}
-                      className={`w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer ${
-                        tier.popular
-                          ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] hover:scale-105'
-                          : 'bg-[#005461] hover:bg-[#006f80] text-white hover:scale-105'
-                      }`}
-                    >
-                      <span>Buy Ticket</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+            {/* Group passes */}
+            <div className="mt-20 text-center space-y-2">
+              <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">Group Passes</span>
+              <h3 className="font-nexa text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+                Bring Your Crew <span className="text-[#83D318]">&amp; Save</span>
+              </h3>
+            </div>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
+              {ticketTiers.filter((tier) => peopleAdmitted(tier) > 1).map(renderTierCard)}
             </div>
 
           </div>
@@ -908,11 +883,11 @@ stakeholders, and emerging changemakers.
                     <h3 className="relative mt-6 font-nexa text-lg font-black text-white uppercase tracking-tight leading-snug">
                       {pillar.title}
                     </h3>
-                    <p className="relative mt-2 text-sm text-slate-300 leading-relaxed">
+                    {/* <p className="relative mt-2 text-sm text-slate-300 leading-relaxed">
                       {pillar.desc}
-                    </p>
+                    </p> */}
 
-                    <ul className="relative mt-auto pt-6 flex flex-wrap gap-1.5">
+                    <ul className="relative mt-auto pt-3 flex flex-wrap gap-2">
                       {pillar.focus.map((item, fIdx) => (
                         <li
                           key={fIdx}
@@ -1177,7 +1152,7 @@ stakeholders, and emerging changemakers.
 
             <div className="text-center md:text-right text-slate-300 text-[11px]">
               <p>© 2026 Techies4Impact. All Rights Reserved.</p>
-              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Rolider Sports Complex, Shiashie - Accra</p>
+              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Padel Zone, Labone - Accra</p>
             </div>
 
           </div>
