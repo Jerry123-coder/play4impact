@@ -8,7 +8,7 @@ import {
   FaRegCalendar as Calendar,
   FaLocationDot as MapPin,
   FaRegClock as Clock,
-  FaStar as Sparkles,
+  // FaStar as Sparkles, // re-enable with the "Official Ticket Passes" badge
   FaArrowRight as ArrowRight,
   FaChevronDown as ChevronDown,
   FaChevronUp as ChevronUp,
@@ -24,7 +24,7 @@ import {
   FaBuildingColumns as Building2,
   FaArrowTrendUp as TrendingUp,
   FaLaptopCode as Laptop,
-  FaSeedling as Seedling,
+  // FaSeedling as Seedling, // re-enable with the "Beginners & Tech Enthusiasts" audience card
 } from 'react-icons/fa6';
 import { PaystackCheckoutModal, type TicketTier } from '../components/PaystackCheckoutModal';
 
