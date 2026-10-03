@@ -1,5 +1,10 @@
+// Ticket slots are shared per pool; group passes use their parent tier's pool.
+// Limits live in api/slots.ts (the server is the source of truth).
+export type SlotPool = 'general' | 'premium' | 'executive';
+
 export interface TicketTier {
   id: string;
+  pool: SlotPool;
   name: string;
   price: number; // in GHS, per pass (a group pass is priced for the whole group)
   tagline: string;
@@ -29,6 +34,7 @@ const premiumFeatures = [
 export const ticketTiers: TicketTier[] = [
   {
     id: 'basic',
+    pool: 'general',
     name: 'General Pass',
     price: 250,
     tagline: 'Basic',
@@ -37,6 +43,7 @@ export const ticketTiers: TicketTier[] = [
   },
   {
     id: 'standard',
+    pool: 'premium',
     name: 'Premium Pass',
     price: 500,
     popular: true,
@@ -46,13 +53,14 @@ export const ticketTiers: TicketTier[] = [
     color: 'blue',
   },
   {
-    id: 'deluxe',
-    name: 'Deluxe Pass',
-    price: 950,
-    tagline: 'Priority red-carpet experience, R&R wellness treat & souvenirs.',
+    id: 'executive',
+    pool: 'executive',
+    name: 'Executive Pass',
+    price: 1000,
+    tagline: 'Deluxe',
     features: [
       'Priority check-in',
-      'Complimentary beverages (Drinks & Water)',
+      'Complimentary beverages (Drinks, Water & Snacks)',
       'Priority access to watch padel matches',
       'Access to partner / innovation zones',
       'Access to health checks',
@@ -66,6 +74,7 @@ export const ticketTiers: TicketTier[] = [
   // Group passes
   {
     id: 'general-triple',
+    pool: 'general',
     name: 'General Pass (Triple Treat)',
     price: 700,
     admits: 3,
@@ -76,6 +85,7 @@ export const ticketTiers: TicketTier[] = [
   },
   {
     id: 'premium-double',
+    pool: 'premium',
     name: 'Premium Pass (Double Treat)',
     price: 950,
     admits: 2,

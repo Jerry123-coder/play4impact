@@ -17,7 +17,7 @@ const RefundsPolicy: React.FC = () => {
           >
             <ArrowLeft size={16} /> Back to Play4Impact Home
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold font-nexa mb-4 tracking-tight leading-tight uppercase">
+          <h1 className="text-4xl md:text-5xl font-bold font-poppins mb-4 tracking-tight leading-tight uppercase">
             Refunds & Cancellation Policy
           </h1>
           <p className="text-gray-300 text-lg max-w-xl mx-auto font-medium">
@@ -28,7 +28,7 @@ const RefundsPolicy: React.FC = () => {
 
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl mt-12 text-left">
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-12 text-left space-y-6">
-          <h2 className="text-2xl font-bold font-nexa uppercase text-slate-900">Pass Refund Guidelines</h2>
+          <h2 className="text-2xl font-bold font-poppins uppercase text-slate-900">Pass Refund Guidelines</h2>
           <p className="text-slate-700 font-medium">
             All ticket pass sales for Play4Impact are final. Passes are non-refundable once issued, except in the event of complete cancellation of the event by organizers.
           </p>

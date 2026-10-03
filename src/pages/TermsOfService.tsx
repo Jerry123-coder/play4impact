@@ -29,7 +29,7 @@ const TermsOfService: React.FC = () => {
           >
             <ArrowLeft size={16} /> Back to Play4Impact Home
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold font-nexa mb-4 tracking-tight leading-tight uppercase">
+          <h1 className="text-4xl md:text-5xl font-bold font-poppins mb-4 tracking-tight leading-tight uppercase">
             Terms of Service
           </h1>
           <p className="text-gray-300 text-lg max-w-xl mx-auto font-medium">
@@ -78,7 +78,7 @@ const TermsOfService: React.FC = () => {
               {/* Section 1 */}
               <section id="agreement" className="scroll-mt-24 pt-4 border-t border-gray-100 text-left">
                 <div className="mb-4 text-left">
-                  <h2 className="text-2xl font-bold font-nexa text-slate-900 text-left uppercase">
+                  <h2 className="text-2xl font-bold font-poppins text-slate-900 text-left uppercase">
                     1. Agreement to Terms
                   </h2>
                 </div>
@@ -92,7 +92,7 @@ const TermsOfService: React.FC = () => {
               {/* Section 2 */}
               <section id="use-conduct" className="scroll-mt-24 pt-4 border-t border-gray-100 text-left">
                 <div className="mb-4 text-left">
-                  <h2 className="text-2xl font-bold font-nexa text-slate-900 text-left uppercase">
+                  <h2 className="text-2xl font-bold font-poppins text-slate-900 text-left uppercase">
                     2. User Responsibilities & Conduct
                   </h2>
                 </div>
@@ -106,7 +106,7 @@ const TermsOfService: React.FC = () => {
               {/* Section 3 */}
               <section id="intellectual-property" className="scroll-mt-24 pt-4 border-t border-gray-100 text-left">
                 <div className="mb-4 text-left">
-                  <h2 className="text-2xl font-bold font-nexa text-slate-900 text-left uppercase">
+                  <h2 className="text-2xl font-bold font-poppins text-slate-900 text-left uppercase">
                     3. Intellectual Property
                   </h2>
                 </div>
@@ -120,7 +120,7 @@ const TermsOfService: React.FC = () => {
               {/* Section 4 */}
               <section id="purchases-pricing" className="scroll-mt-24 pt-4 border-t border-gray-100 text-left">
                 <div className="mb-4 text-left">
-                  <h2 className="text-2xl font-bold font-nexa text-slate-900 text-left uppercase">
+                  <h2 className="text-2xl font-bold font-poppins text-slate-900 text-left uppercase">
                     4. Purchases & Pricing
                   </h2>
                 </div>
@@ -134,7 +134,7 @@ const TermsOfService: React.FC = () => {
               {/* Section 5 */}
               <section id="limitation-liability" className="scroll-mt-24 pt-4 border-t border-gray-100 text-left">
                 <div className="mb-4 text-left">
-                  <h2 className="text-2xl font-bold font-nexa text-slate-900 text-left uppercase">
+                  <h2 className="text-2xl font-bold font-poppins text-slate-900 text-left uppercase">
                     5. Limitation of Liability
                   </h2>
                 </div>
@@ -148,7 +148,7 @@ const TermsOfService: React.FC = () => {
               {/* Contact Block */}
               <div className="mt-16 bg-[#F1F9E5] rounded-2xl border border-[#83D318]/30 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-left">
                 <div className="text-left">
-                  <h4 className="text-lg font-bold text-slate-900 font-nexa mb-1 text-left uppercase">Have questions about our Terms?</h4>
+                  <h4 className="text-lg font-bold text-slate-900 font-poppins mb-1 text-left uppercase">Have questions about our Terms?</h4>
                   <p className="text-sm text-slate-700 font-semibold text-left">Send us an email at techies4impact@gmail.com for clarification or legal assistance.</p>
                 </div>
               </div>

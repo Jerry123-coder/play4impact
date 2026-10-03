@@ -14,6 +14,7 @@ import {
 import toast from 'react-hot-toast';
 import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
 import { findPromoCode } from '../data/promoCodes';
+import { useAvailability, fetchAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
 export type { TicketTier };
 
@@ -105,7 +106,14 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
     }
   }, []);
 
+  // Live ticket slots, refreshed whenever the modal opens
+  const [availability, setAvailability] = useAvailability(isOpen);
+
   if (!isOpen) return null;
+
+  const currentLeft = passesLeft(currentTier, availability); // null = unknown
+  const currentSoldOut = currentLeft === 0;
+  const maxQuantity = currentLeft ?? Infinity;
 
   const subtotal = currentTier.price * quantity;
   const discountAmount = discountPercent > 0 ? Math.round((subtotal * discountPercent) / 100) : 0;
@@ -140,7 +148,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
     toast('Promo code removed.');
   };
 
-  const handlePaystackPayment = (e: React.FormEvent) => {
+  const handlePaystackPayment = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!fullName.trim() || !email.trim()) {
@@ -154,6 +162,21 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
     }
 
     setLoading(true);
+
+    const latest = await fetchAvailability(true);
+    if (latest) {
+      setAvailability(latest);
+      const left = passesLeft(currentTier, latest) ?? Infinity;
+      if (left < quantity) {
+        setLoading(false);
+        toast.error(
+          left === 0
+            ? `Sorry, ${currentTier.name} is sold out.`
+            : `Only ${left} ${currentTier.name} left. Please reduce your quantity.`
+        );
+        return;
+      }
+    }
 
     const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
@@ -278,12 +301,12 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
             <div className="lg:col-span-6 p-6 sm:p-7 bg-[#FAF8F3] border-b lg:border-b-0 lg:border-r border-slate-200 space-y-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-xl sm:text-2xl font-nexa font-black uppercase text-[#10324B] tracking-tight">
+                  <h4 className="text-xl sm:text-2xl font-poppins font-black uppercase text-[#10324B] tracking-tight">
                     Select Pass Tier
                   </h4>
-                  <p className="font-nexa text-xs text-slate-500 font-semibold mt-0.5">Choose your gate entry access level</p>
+                  <p className="font-poppins text-xs text-slate-500 font-semibold mt-0.5">Choose your gate entry access level</p>
                 </div>
-                <span className="font-nexa text-[11px] text-[#005461] font-extrabold bg-[#83D318]/25 px-3 py-1 rounded-full border border-[#83D318]/60">
+                <span className="font-poppins text-[11px] text-[#005461] font-extrabold bg-[#83D318]/25 px-3 py-1 rounded-full border border-[#83D318]/60">
                   {allTiers.length} Options
                 </span>
               </div>
@@ -292,12 +315,20 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
               <div className="space-y-3.5">
                 {allTiers.map((tier) => {
                   const isSelected = currentTier.id === tier.id;
+                  const left = passesLeft(tier, availability);
+                  const soldOut = left === 0;
 
                   return (
                     <div
                       key={tier.id}
-                      onClick={() => setCurrentTier(tier)}
-                      className={`relative rounded-2xl cursor-pointer overflow-hidden transition-all duration-200 ${
+                      onClick={() => {
+                        if (soldOut) return;
+                        setCurrentTier(tier);
+                        if (left !== null) setQuantity((q) => Math.min(q, left));
+                      }}
+                      className={`relative rounded-2xl overflow-hidden transition-all duration-200 ${
+                        soldOut ? 'opacity-50 cursor-not-allowed ' : 'cursor-pointer '
+                      }${
                         isSelected
                           ? 'bg-white border-2 border-[#005461] shadow-md ring-2 ring-[#83D318]/60'
                           : 'bg-white border border-slate-200 hover:border-[#005461]/60 hover:shadow-sm'
@@ -320,34 +351,43 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
 
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <h5 className="text-base sm:text-lg font-nexa font-black tracking-tight uppercase text-[#10324B]">
+                              <h5 className="text-base sm:text-lg font-poppins font-black tracking-tight uppercase text-[#10324B]">
                                 {tier.name}
                               </h5>
                               {tier.badge && (
-                                <span className="font-nexa text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#83D318] text-[#10324B]">
+                                <span className="font-poppins text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#83D318] text-[#10324B]">
                                   {tier.badge}
                                 </span>
                               )}
                             </div>
-                            <p className="font-nexa text-xs font-medium text-slate-500 line-clamp-1 mt-0.5">
+                            <p className="font-poppins text-xs font-medium text-slate-500 line-clamp-1 mt-0.5">
                               {tier.tagline}
                             </p>
+                            {left !== null && left > 0 && left <= LOW_STOCK_THRESHOLD && (
+                              <p className="font-poppins text-[10px] font-extrabold uppercase tracking-wider text-rose-600 mt-0.5">
+                                Only {left} left
+                              </p>
+                            )}
                           </div>
                         </div>
 
                         {/* Price & Selection Badge */}
                         <div className="flex items-center gap-3 shrink-0 pl-3 border-l border-dashed border-slate-200">
                           <div className="text-right">
-                            <div className="font-nexa text-lg sm:text-xl font-black text-[#005461]">
+                            <div className="font-poppins text-lg sm:text-xl font-black text-[#005461]">
                               {tier.price}{' '}
                               <span className="text-xs font-bold text-slate-400 uppercase">GHS</span>
                             </div>
                             {isSelected ? (
-                              <span className="inline-flex items-center gap-1 font-nexa text-[9px] font-black bg-[#83D318] text-[#10324B] px-2 py-0.5 rounded-full uppercase tracking-wider mt-0.5">
+                              <span className="inline-flex items-center gap-1 font-poppins text-[9px] font-black bg-[#83D318] text-[#10324B] px-2 py-0.5 rounded-full uppercase tracking-wider mt-0.5">
                                 <Check className="w-2.5 h-2.5 stroke-[3]" /> Selected
                               </span>
+                            ) : soldOut ? (
+                              <span className="font-poppins text-[9px] font-black text-rose-600 block uppercase">
+                                Sold out
+                              </span>
                             ) : (
-                              <span className="font-nexa text-[9px] font-bold text-slate-400 block uppercase">
+                              <span className="font-poppins text-[9px] font-bold text-slate-400 block uppercase">
                                 Select
                               </span>
                             )}
@@ -358,11 +398,11 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                       {/* Accordion Features (Expanded when selected) */}
                       {isSelected && (
                         <div className="px-4.5 pb-4 pt-3 border-t border-slate-100 bg-[#F4F8F5] space-y-2">
-                          <div className="flex items-center justify-between font-nexa text-[11px] font-bold uppercase text-[#005461] tracking-wider">
+                          <div className="flex items-center justify-between font-poppins text-[11px] font-bold uppercase text-[#005461] tracking-wider">
                             <span>Includes ({tier.name}):</span>
                             <span>{tier.price} GHS</span>
                           </div>
-                          <div className="grid grid-cols-1 gap-1.5 pt-0.5 font-nexa text-xs text-slate-700">
+                          <div className="grid grid-cols-1 gap-1.5 pt-0.5 font-poppins text-xs text-slate-700">
                             {tier.features.map((feat, i) => (
                               <div key={i} className="flex items-center gap-2">
                                 <CheckCircle2 className="w-3.5 h-3.5 text-[#009B55] shrink-0" />
@@ -385,12 +425,12 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-xl sm:text-2xl font-nexa font-black uppercase text-[#10324B] tracking-tight">
+                    <h4 className="text-xl sm:text-2xl font-poppins font-black uppercase text-[#10324B] tracking-tight">
                       Checkout Details
                     </h4>
-                    <p className="font-nexa text-xs text-slate-500 font-semibold mt-0.5">Enter purchaser contact information</p>
+                    <p className="font-poppins text-xs text-slate-500 font-semibold mt-0.5">Enter purchaser contact information</p>
                   </div>
-                  <span className="font-nexa text-[11px] text-[#005461] font-black uppercase tracking-wider bg-white/80 px-2.5 py-1 rounded-md border border-slate-300">
+                  <span className="font-poppins text-[11px] text-[#005461] font-black uppercase tracking-wider bg-white/80 px-2.5 py-1 rounded-md border border-slate-300">
                     Paystack Direct
                   </span>
                 </div>
@@ -399,14 +439,14 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                 <div className="relative rounded-2xl overflow-hidden bg-[#005461] text-white p-4 sm:p-5 border border-[#005461] shadow-md space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="font-nexa text-[10px] font-black uppercase tracking-widest text-[#83D318] block">
+                      <span className="font-poppins text-[10px] font-black uppercase tracking-widest text-[#83D318] block">
                         SELECTED PASS
                       </span>
-                      <h4 className="font-nexa text-2xl font-black uppercase tracking-tight text-white mt-0.5">
+                      <h4 className="font-poppins text-2xl font-black uppercase tracking-tight text-white mt-0.5">
                         {currentTier.name}
                       </h4>
                     </div>
-                    <div className="px-3 py-1 bg-[#83D318] text-[#10324B] font-nexa text-xs font-black rounded-lg uppercase shadow-sm">
+                    <div className="px-3 py-1 bg-[#83D318] text-[#10324B] font-poppins text-xs font-black rounded-lg uppercase shadow-sm">
                       {quantity}x Pass{totalPeople > quantity ? ` · Admits ${totalPeople}` : ''}
                     </div>
                   </div>
@@ -426,12 +466,12 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                     )}
 
                     <div className="flex items-baseline gap-2 pt-1">
-                      <span className="font-nexa text-3xl font-black text-[#83D318]">
+                      <span className="font-poppins text-3xl font-black text-[#83D318]">
                         {totalAmount.toLocaleString()}
                       </span>
-                      <span className="font-nexa text-sm font-bold text-white/90 uppercase">GHS Total</span>
+                      <span className="font-poppins text-sm font-bold text-white/90 uppercase">GHS Total</span>
                       {quantity > 1 && (
-                        <span className="font-nexa text-xs text-slate-300 ml-auto">
+                        <span className="font-poppins text-xs text-slate-300 ml-auto">
                           ({Math.round(totalAmount / quantity)} GHS each)
                         </span>
                       )}
@@ -444,24 +484,25 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                   
                   {/* Quantity Counter */}
                   <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 shadow-sm">
-                    <span className="font-nexa text-xs font-bold text-[#10324B] uppercase tracking-wider">
+                    <span className="font-poppins text-xs font-bold text-[#10324B] uppercase tracking-wider">
                       Pass Quantity
                     </span>
                     <div className="flex items-center gap-3">
                       <button
                         type="button"
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-7 h-7 rounded-lg bg-[#005461] hover:bg-[#83D318] hover:text-[#10324B] text-white font-nexa font-black text-base transition-colors flex items-center justify-center cursor-pointer"
+                        className="w-7 h-7 rounded-lg bg-[#005461] hover:bg-[#83D318] hover:text-[#10324B] text-white font-poppins font-black text-base transition-colors flex items-center justify-center cursor-pointer"
                       >
                         -
                       </button>
-                      <span className="font-nexa font-black text-sm w-5 text-center text-[#10324B]">
+                      <span className="font-poppins font-black text-sm w-5 text-center text-[#10324B]">
                         {quantity}
                       </span>
                       <button
                         type="button"
-                        onClick={() => setQuantity((q) => q + 1)}
-                        className="w-7 h-7 rounded-lg bg-[#005461] hover:bg-[#83D318] hover:text-[#10324B] text-white font-nexa font-black text-base transition-colors flex items-center justify-center cursor-pointer"
+                        onClick={() => setQuantity((q) => Math.min(q + 1, maxQuantity))}
+                        disabled={quantity >= maxQuantity}
+                        className="w-7 h-7 rounded-lg bg-[#005461] hover:bg-[#83D318] hover:text-[#10324B] text-white font-poppins font-black text-base transition-colors flex items-center justify-center cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                       >
                         +
                       </button>
@@ -471,7 +512,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                   {/* Promo Code Entry Box */}
                   <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-sm space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-nexa text-xs font-extrabold text-[#10324B] uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="font-poppins text-xs font-extrabold text-[#10324B] uppercase tracking-wider flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-[#005461]" /> Promo Code
                       </span>
                       {appliedPromo && (
@@ -493,7 +534,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                         <button
                           type="button"
                           onClick={handleRemovePromo}
-                          className="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-nexa font-extrabold text-xs rounded-lg transition-colors cursor-pointer"
+                          className="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-poppins font-extrabold text-xs rounded-lg transition-colors cursor-pointer"
                         >
                           Remove
                         </button>
@@ -501,7 +542,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                         <button
                           type="button"
                           onClick={() => handleApplyPromo()}
-                          className="px-4 py-1.5 bg-[#005461] hover:bg-[#83D318] hover:text-[#10324B] text-white font-nexa font-extrabold text-xs uppercase rounded-lg transition-colors cursor-pointer"
+                          className="px-4 py-1.5 bg-[#005461] hover:bg-[#83D318] hover:text-[#10324B] text-white font-poppins font-extrabold text-xs uppercase rounded-lg transition-colors cursor-pointer"
                         >
                           Apply
                         </button>
@@ -514,7 +555,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                     <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsGift(!isGift)}>
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-amber-600" />
-                        <span className="font-nexa text-xs font-extrabold text-[#10324B] uppercase tracking-wider">
+                        <span className="font-poppins text-xs font-extrabold text-[#10324B] uppercase tracking-wider">
                           Buy as a Gift for Someone Else? 🎁
                         </span>
                       </div>
@@ -530,7 +571,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                     {isGift && (
                       <div className="pt-2 border-t border-amber-500/20 space-y-2.5 animate-fadeIn">
                         <div>
-                          <label className="block font-nexa text-[10px] font-black text-[#10324B] uppercase tracking-wider mb-1">
+                          <label className="block font-poppins text-[10px] font-black text-[#10324B] uppercase tracking-wider mb-1">
                             Recipient Full Name *
                           </label>
                           <input
@@ -539,12 +580,12 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                             placeholder="Recipient's Name"
                             value={recipientName}
                             onChange={(e) => setRecipientName(e.target.value)}
-                            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[#10324B] font-nexa font-semibold text-xs focus:outline-none focus:border-[#005461]"
+                            className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[#10324B] font-poppins font-semibold text-xs focus:outline-none focus:border-[#005461]"
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           <div>
-                            <label className="block font-nexa text-[10px] font-black text-[#10324B] uppercase tracking-wider mb-1">
+                            <label className="block font-poppins text-[10px] font-black text-[#10324B] uppercase tracking-wider mb-1">
                               Recipient Email *
                             </label>
                             <input
@@ -553,11 +594,11 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                               placeholder="recipient@example.com"
                               value={recipientEmail}
                               onChange={(e) => setRecipientEmail(e.target.value)}
-                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[#10324B] font-nexa font-semibold text-xs focus:outline-none focus:border-[#005461]"
+                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[#10324B] font-poppins font-semibold text-xs focus:outline-none focus:border-[#005461]"
                             />
                           </div>
                           <div>
-                            <label className="block font-nexa text-[10px] font-black text-[#10324B] uppercase tracking-wider mb-1">
+                            <label className="block font-poppins text-[10px] font-black text-[#10324B] uppercase tracking-wider mb-1">
                               Gift Note (Optional)
                             </label>
                             <input
@@ -565,7 +606,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                               placeholder="Enjoy the games!"
                               value={giftMessage}
                               onChange={(e) => setGiftMessage(e.target.value)}
-                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[#10324B] font-nexa font-semibold text-xs focus:outline-none focus:border-[#005461]"
+                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-[#10324B] font-poppins font-semibold text-xs focus:outline-none focus:border-[#005461]"
                             />
                           </div>
                         </div>
@@ -575,7 +616,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
 
                   {/* Input: Purchaser Name */}
                   <div>
-                    <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
+                    <label className="block font-poppins text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
                       {isGift ? 'Your Full Name (Purchaser) *' : 'Full Name *'}
                     </label>
                     <div className="relative">
@@ -586,14 +627,14 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                         placeholder="e.g. Kwame Mensah"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-poppins font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
                       />
                     </div>
                   </div>
 
                   {/* Input: Email */}
                   <div>
-                    <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
+                    <label className="block font-poppins text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
                       {isGift ? 'Your Email Address *' : 'Email Address *'}
                     </label>
                     <div className="relative">
@@ -604,14 +645,14 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                         placeholder="kwame@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-poppins font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
                       />
                     </div>
                   </div>
 
                   {/* Phone Number (commented out) */}
                   {/* <div>
-                    <label className="block font-nexa text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
+                    <label className="block font-poppins text-[11px] font-extrabold text-[#10324B] mb-1 uppercase tracking-wider">
                       Phone Number *
                     </label>
                     <div className="relative">
@@ -622,7 +663,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                         placeholder="024xxxxxxx"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-nexa font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-[#10324B] font-poppins font-semibold placeholder-slate-400 text-sm focus:outline-none focus:border-[#005461] focus:ring-2 focus:ring-[#83D318]/40 transition-all shadow-sm"
                       />
                     </div>
                   </div> */}
@@ -630,15 +671,19 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                   {/* Solid High-Impact Payment Button */}
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full py-3.5 bg-[#83D318] hover:bg-[#94eb1c] active:scale-[0.98] text-[#10324B] font-nexa font-black text-base uppercase tracking-wider rounded-xl shadow-md border border-[#10324B] flex items-center justify-center gap-2.5 transition-all disabled:opacity-50 mt-2 cursor-pointer"
+                    disabled={loading || currentSoldOut}
+                    className="w-full py-3.5 bg-[#83D318] hover:bg-[#94eb1c] active:scale-[0.98] text-[#10324B] font-poppins font-black text-base uppercase tracking-wider rounded-xl shadow-md border border-[#10324B] flex items-center justify-center gap-2.5 transition-all disabled:opacity-50 mt-2 cursor-pointer"
                   >
                     {loading ? (
                       <span className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-[#10324B] border-t-transparent"></span>
                     ) : (
                       <>
                         <Lock className="w-4 h-4 text-[#10324B]" />
-                        <span>Proceed To Payment ({totalAmount.toLocaleString()} GHS)</span>
+                        <span>
+                          {currentSoldOut
+                            ? `${currentTier.name} Sold Out`
+                            : `Proceed To Payment (${totalAmount.toLocaleString()} GHS)`}
+                        </span>
                       </>
                     )}
                   </button>
@@ -647,7 +692,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
               </div>
 
               {/* Paystack Security Footer */}
-              <div className="pt-2 border-t border-slate-300 space-y-1 text-center font-nexa">
+              <div className="pt-2 border-t border-slate-300 space-y-1 text-center font-poppins">
                 <div className="flex items-center justify-center gap-2 text-xs text-slate-700 font-bold">
                 </div>
                 <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 font-bold">
@@ -670,7 +715,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
             </div>
 
             <div>
-              <h4 className="text-3xl font-nexa font-black text-[#10324B] uppercase">Pass Issued Successfully!</h4>
+              <h4 className="text-3xl font-poppins font-black text-[#10324B] uppercase">Pass Issued Successfully!</h4>
               <p className="text-sm text-slate-600 mt-1">
                 Your entry gate pass is ready. Confirmation has been registered for {ticketIssued.email}.
               </p>
@@ -678,7 +723,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
 
             {/* Gift Banner on Ticket if applicable */}
             {ticketIssued.isGift && (
-              <div className="p-4 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-900 font-nexa text-xs font-bold text-left flex items-center gap-3">
+              <div className="p-4 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-900 font-poppins text-xs font-bold text-left flex items-center gap-3">
                 <span className="text-2xl">🎁</span>
                 <div>
                   <span className="uppercase tracking-wider font-black block">Gift Ticket Issued</span>
@@ -696,7 +741,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                   <span className="px-3 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-lg uppercase tracking-wider inline-block">
                     {ticketIssued.tier} ({ticketIssued.quantity}x){ticketIssued.people > ticketIssued.quantity ? ` · Admits ${ticketIssued.people}` : ''}
                   </span>
-                  <h4 className="text-3xl font-nexa font-black text-white tracking-tight mt-2">
+                  <h4 className="text-3xl font-poppins font-black text-white tracking-tight mt-2">
                     PLAY 4 IMPACT 2026
                   </h4>
                   <p className="text-xs text-slate-300">Padel • Tech Demos • Investor Lounge • Wellness</p>

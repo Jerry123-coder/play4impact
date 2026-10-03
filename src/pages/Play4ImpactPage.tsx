@@ -28,6 +28,7 @@ import {
 } from 'react-icons/fa6';
 import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
 import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
+import { useAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
 // Google Form for partnership sign-ups. Paste the form's share link here;
 // until then the partnership button falls back to email.
@@ -36,8 +37,8 @@ const PARTNERSHIP_MAILTO = 'mailto:techies4impact@gmail.com?subject=Play4Impact%
 
 const faqs = [
   {
-    q: 'What is Play 4 Impact?',
-    a: 'PLAY4IMPACT is a premier tech lifestyle event powered by Techies4Impact. It seamlessly blends high-energy sports (Padel tennis matches), digital technology showcases, investor deal-making, wellness experiences, and executive networking.',
+    q: 'What is Play4Impact?',
+    a: 'PLAY4IMPACT is a premier tech lifestyle event powered by Techies4Impact. It seamlessly blends high-energy racket sports, innovation showcases, investor deal-making, wellness experiences, and executive networking.',
   },
   {
     q: 'Can I participate in the Padel matches or watch?',
@@ -49,7 +50,7 @@ const faqs = [
   },
   {
     q: 'What is the P4I Clubhouse?',
-    a: 'P4I Clubhouse is a curated community of tech, corporate and sports lifestyle individuals. Approved members benefit from early updates, exclusive discounts and new developments within the Play4Impact ecosystem. Membership is by application. Deluxe Pass holders also receive a signature wellness treat curated by The Wellness Place by R&R, Accra’s members-only wellness club.',
+    a: 'P4I Clubhouse is a curated community of tech, corporate and sports lifestyle individuals. Approved members benefit from early updates, exclusive discounts and new developments within the Play4Impact ecosystem. Membership is by application.',
   },
   {
     q: 'Where and when is the event taking place?',
@@ -64,19 +65,19 @@ const faqs = [
 // Event partners & sponsors (all Ghana-based or active in Ghana).
 // darkTile: logo is white/light and needs a dark background to be visible.
 const eventPartners: { name: string; category: string; logo: string; darkTile?: boolean }[] = [
-  { name: 'Diaspora Affairs', category: 'Office of the President', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
-  { name: 'Ghana Fintech', category: '& Payments Association', logo: '/images/p4i/sponsors/ghana-fintech.png' },
+  { name: 'Diaspora Affairs', category: 'Institutional Partner', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
+  { name: 'Ghana Fintech & Payments Association ', category: 'Institutional Partner', logo: '/images/p4i/sponsors/ghana-fintech.png' },
   { name: 'R&R Wellness', category: 'Official Wellness Partner', logo: '/images/p4i/sponsors/rr-wellness-logo.png' },
-  { name: 'Lyvv Cosmetics', category: 'Beauty & Wellness', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
-  { name: 'Media For Us', category: 'Media & Production', logo: '/images/p4i/sponsors/media-for-us.png' },
-  { name: 'YFM Ghana', category: 'Radio Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
+  { name: 'Lyvv Cosmetics', category: 'Official Selfcare Partner', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
+  { name: 'Media For Us', category: 'Media Partner', logo: '/images/p4i/sponsors/media-for-us.png' },
+  { name: 'YFM Ghana', category: 'Media Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
   { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
-  { name: 'Stella Artois', category: 'Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
-  { name: 'Decathlon', category: 'Sports & Apparel', logo: '/images/p4i/sponsors/decathlon.svg' },
+  { name: 'Stella Artois', category: 'Official Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
+  { name: 'Decathlon', category: 'Sports Partner', logo: '/images/p4i/sponsors/decathlon.svg' },
   { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
   { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.png', darkTile: true },
-  { name: 'MX24 TV', category: 'Television Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
-  { name: 'B&FT', category: 'Business Newspaper', logo: '/images/p4i/sponsors/bft.png' },
+  { name: 'MX24 TV', category: 'Media Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
+  { name: 'B&FT', category: 'Media Partner', logo: '/images/p4i/sponsors/bft.png' },
 ];
 
 const highlightsStories = [
@@ -92,7 +93,7 @@ const highlightsStories = [
     id: 2,
     category: 'VIP INVESTOR LOUNGE',
     title: 'Champions & Investor Mixer',
-    desc: 'Connect with founders, ceos, investors and global leaders in a curated session.',
+    desc: 'Connect with founders, CEOs, investors and global leaders in a curated session.',
     image: '/images/p4i/mixer.jpg',
   },
   {
@@ -106,7 +107,7 @@ const highlightsStories = [
   // {
   //   id: 4,
   //   category: 'WELLNESS & RECOVERY',
-  //   access: 'Deluxe Pass Exclusive',
+  //   access: 'Executive Pass Exclusive',
   //   title: 'Wellness Treat by R&R',
   //   desc: 'Recharge between matches with a signature wellness treat from R&R wellness.',
   //   image: '/images/p4i/wellness.jpg',
@@ -198,7 +199,7 @@ const EventHighlightsCarousel: React.FC = () => {
           <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest block mb-1">
             Event Highlights
           </span>
-          <h2 className="font-nexa text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+          <h2 className="font-poppins text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
             What To Expect At <span className="text-[#83D318]">P4I</span>
           </h2>
         </div>
@@ -251,21 +252,21 @@ const EventHighlightsCarousel: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#10324B] via-[#10324B]/70 to-transparent"></div>
 
                 {/* Top Badge */}
-                <div className="absolute top-5 left-5 right-5 flex items-center justify-between gap-2">
+                {/* <div className="absolute top-5 left-5 right-5 flex items-center justify-between gap-2">
                   <span className="px-3 py-1 bg-[#83D318] text-[#10324B] text-[11px] font-black rounded-md uppercase shadow-md truncate">
                     {story.access}
                   </span>
                   <span className="px-3 py-1 bg-[#10324B]/80 backdrop-blur-md text-[#83D318] text-[10px] font-bold rounded-full border border-[#83D318]/40 truncate">
                     {story.category}
                   </span>
-                </div>
+                </div> */}
 
                 {/* Card Bottom Details: fixed-height, top-aligned so titles line up across cards */}
                 <div className="absolute bottom-6 left-6 right-6 h-34 xl:h-22 flex flex-col gap-2">
-                  <h3 className="font-nexa text-2xl font-extrabold text-white tracking-tight leading-tight line-clamp-2">
+                  <h3 className="font-poppins text-2xl font-extrabold text-white tracking-tight leading-tight line-clamp-2">
                     {story.title}
                   </h3>
-                  <p className="font-nexa text-sm text-slate-200 leading-relaxed line-clamp-3">
+                  <p className="font-poppins text-sm text-slate-200 leading-relaxed line-clamp-3">
                     {story.desc}
                   </p>
                 </div>
@@ -331,15 +332,15 @@ const CourtBackdrop: React.FC<{ orientation: 'landscape' | 'portrait'; className
 };
 
 // Fixed-width countdown cell: each digit gets its own slot so proportional
-// Nexa digits (e.g. a narrow "1") never make the timer jiggle as it ticks.
+// digits (e.g. a narrow "1") never make the timer jiggle as it ticks.
 const CountdownUnit: React.FC<{ value: number; label: string; highlight?: boolean }> = ({ value, label, highlight }) => (
   <div className="min-w-[2.6rem] sm:min-w-[3.5rem] px-1.5 sm:px-2.5 py-1 rounded-lg bg-[#10324B] border border-[#83D318]/40 shadow-sm flex flex-col items-center leading-none">
-    <span className={`flex font-nexa font-black text-[15px] sm:text-xl ${highlight ? 'text-[#83D318]' : 'text-white'}`}>
+    <span className={`flex font-poppins font-black text-[15px] sm:text-xl ${highlight ? 'text-[#83D318]' : 'text-white'}`}>
       {String(value).padStart(2, '0').split('').map((digit, i) => (
         <span key={i} className="inline-block w-[0.68em] text-center">{digit}</span>
       ))}
     </span>
-    <span className="mt-1 font-nexa text-[8px] sm:text-[9px] font-extrabold uppercase tracking-[0.12em] text-slate-300">
+    <span className="mt-1 font-poppins text-[8px] sm:text-[9px] font-extrabold uppercase tracking-[0.12em] text-slate-300">
       {label}
     </span>
   </div>
@@ -347,6 +348,7 @@ const CountdownUnit: React.FC<{ value: number; label: string; highlight?: boolea
 
 export const Play4ImpactPage: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState<TicketTier>(ticketTiers[1]); // Default Premium Pass
+  const [availability] = useAvailability(); // live ticket slots
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
@@ -375,7 +377,7 @@ export const Play4ImpactPage: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const targetDate = new Date('2026-11-07T09:00:00Z').getTime();
+    const targetDate = new Date('2026-11-07T010:00:00Z').getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -400,74 +402,93 @@ export const Play4ImpactPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const renderTierCard = (tier: TicketTier) => (
-    <div
-      key={tier.id}
-      className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${
-        tier.popular
-          ? 'bg-[#005461] border-2 border-[#83D318] shadow-2xl'
-          : 'bg-[#0A1F2E] border border-[#005461] hover:border-[#83D318]/40'
-      }`}
-    >
-      {/* Badge */}
-      {tier.badge && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-wider shadow-md">
-          {tier.badge}
-        </div>
-      )}
+  const renderTierCard = (tier: TicketTier) => {
+    const left = passesLeft(tier, availability); // null = unknown
+    const soldOut = left === 0;
 
-      <div className="space-y-6">
-        <div>
-          <h3 className="font-nexa text-2xl font-black text-white uppercase">
-              {/* "General Pass (Triple Treat)" -> name + lime subtitle */}
-              {tier.name.replace(/\s*\(.*\)$/, '')}
-              {tier.name.match(/\((.*)\)$/) && (
-                <span className="block mt-1 text-lg text-[#83D318]">{tier.name.match(/\((.*)\)$/)![1]}</span>
-              )}
-            </h3>
-          <p className="text-xs text-slate-300 mt-2 min-h-[36px]">{tier.tagline}</p>
-        </div>
+    return (
+      <div
+        key={tier.id}
+        className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${
+          tier.popular
+            ? 'bg-[#005461] border-2 border-[#83D318] shadow-2xl'
+            : 'bg-[#0A1F2E] border border-[#005461] hover:border-[#83D318]/40'
+        }`}
+      >
+        {/* Badge */}
+        {tier.badge && (
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-wider shadow-md">
+            {tier.badge}
+          </div>
+        )}
 
-        <div className="pt-2 border-t border-white/10 flex items-baseline gap-2">
-          <span className="text-4xl sm:text-5xl font-black text-[#83D318]">
-            {tier.price}
+        <div className="space-y-6">
+          <div>
+            <h3 className="font-poppins text-2xl font-black text-white uppercase">
+                {/* "General Pass (Triple Treat)" -> name + lime subtitle */}
+                {tier.name.replace(/\s*\(.*\)$/, '')}
+                {tier.name.match(/\((.*)\)$/) && (
+                  <span className="block mt-1 text-lg text-[#83D318]">{tier.name.match(/\((.*)\)$/)![1]}</span>
+                )}
+              </h3>
+            <p className="text-xs text-slate-300 mt-2 min-h-[36px]">{tier.tagline}</p>
+          </div>
+
+          <div className="pt-2 border-t border-white/10 flex flex-wrap items-baseline gap-2">
+            <span className="text-4xl sm:text-5xl font-black text-[#83D318]">
+              {tier.price}
+            </span>
+            <span className="text-lg font-bold text-slate-300">GHS</span>
+            <span className="text-xs text-slate-400">
+            / {peopleAdmitted(tier) > 1 ? `${peopleAdmitted(tier)} people` : 'person'}
           </span>
-          <span className="text-lg font-bold text-slate-300">GHS</span>
-          <span className="text-xs text-slate-400">
-          / {peopleAdmitted(tier) > 1 ? `${peopleAdmitted(tier)} people` : 'person'}
-        </span>
+            {left !== null && left > 0 && left <= LOW_STOCK_THRESHOLD && (
+              <span className="ml-auto px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-400/40 text-[10px] font-black uppercase tracking-wider text-rose-300">
+                Only {left} left
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">
+              What's Included:
+            </span>
+            <ul className="space-y-2.5">
+              {tier.features.map((feat, idx) => (
+                <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-200">
+                  <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-0.5" />
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="space-y-3 pt-2">
-          <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">
-            What's Included:
-          </span>
-          <ul className="space-y-2.5">
-            {tier.features.map((feat, idx) => (
-              <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-200">
-                <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-0.5" />
-                <span>{feat}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="pt-8">
+          <button
+            onClick={() => handleBuyTicket(tier)}
+            disabled={soldOut}
+            className={`w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg ${
+              soldOut
+                ? 'bg-white/10 text-slate-400 cursor-not-allowed'
+                : tier.popular
+                ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] hover:scale-105 cursor-pointer'
+                : 'bg-[#005461] hover:bg-[#006f80] text-white hover:scale-105 cursor-pointer'
+            }`}
+          >
+            {soldOut ? (
+              <span>Sold Out</span>
+            ) : (
+              <>
+                <span>Buy Ticket</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </div>
       </div>
-
-      <div className="pt-8">
-        <button
-          onClick={() => handleBuyTicket(tier)}
-          className={`w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer ${
-            tier.popular
-              ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] hover:scale-105'
-              : 'bg-[#005461] hover:bg-[#006f80] text-white hover:scale-105'
-          }`}
-        >
-          <span>Buy Ticket</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#10324B] text-slate-100 font-sans selection:bg-[#83D318] selection:text-[#10324B]">
@@ -497,7 +518,7 @@ export const Play4ImpactPage: React.FC = () => {
 
             {/* Center: Live Ticking Countdown Timer */}
             <div className="flex items-center gap-1.5 sm:gap-2" role="timer" aria-label="Countdown to event">
-              <span className="hidden xl:inline mr-1 font-nexa text-xs font-extrabold uppercase text-slate-300 tracking-wider">
+              <span className="hidden xl:inline mr-1 font-poppins text-xs font-extrabold uppercase text-slate-300 tracking-wider">
                 Event Starts In:
               </span>
               <CountdownUnit value={timeLeft.days} label="Days" />
@@ -514,7 +535,7 @@ export const Play4ImpactPage: React.FC = () => {
             }`}>
               <button
                 onClick={() => handleBuyTicket(ticketTiers[0])}
-                className="py-2.5 px-5 sm:px-6 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-nexa text-xs sm:text-sm uppercase tracking-wider font-black rounded-xl shadow-lg border border-[#10324B] flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
+                className="py-2.5 px-5 sm:px-6 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-poppins text-xs sm:text-sm uppercase tracking-wider font-black rounded-xl shadow-lg border border-[#10324B] flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
               >
                 <Ticket className="w-4 h-4 text-[#10324B]" />
                 <span>Get Tickets</span>
@@ -532,7 +553,7 @@ export const Play4ImpactPage: React.FC = () => {
           }`}>
             <button
               onClick={() => handleBuyTicket(ticketTiers[0])}
-              className="relative py-2 px-4 bg-[#83D318] text-[#10324B] font-nexa text-[11px] uppercase tracking-wider font-black rounded-lg border-2 border-[#10324B] shadow-[3px_3px_0_#10324B] flex items-center gap-1.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none transition-all cursor-pointer whitespace-nowrap"
+              className="relative py-2 px-4 bg-[#83D318] text-[#10324B] font-poppins text-[11px] uppercase tracking-wider font-black rounded-lg border-2 border-[#10324B] shadow-[3px_3px_0_#10324B] flex items-center gap-1.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none transition-all cursor-pointer whitespace-nowrap"
             >
               {/* Tape strip holding the sticker to the nav */}
               <span
@@ -559,7 +580,7 @@ export const Play4ImpactPage: React.FC = () => {
               <div className="lg:col-span-6 space-y-8">
 
                 {/* Eyebrow */}
-                {/* <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#005461]/70 border border-[#83D318]/40 font-nexa text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-slate-100">
+                {/* <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#005461]/70 border border-[#83D318]/40 font-poppins text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-slate-100">
                   <span className="relative flex w-2 h-2">
                     <span className="absolute inset-0 rounded-full bg-[#83D318] animate-ping opacity-75"></span>
                     <span className="relative w-2 h-2 rounded-full bg-[#83D318]"></span>
@@ -583,7 +604,7 @@ export const Play4ImpactPage: React.FC = () => {
                   </span>
                 </h1>
 
-                <p className="font-nexa text-slate-200 text-base sm:text-lg font-normal leading-relaxed max-w-xl pt-2">
+                <p className="font-poppins text-slate-200 text-base sm:text-lg font-normal leading-relaxed max-w-xl pt-2">
                  Play41mpact 2026 is a premier ecosystem
 engagement platform that leverages sport,
 wellness, networking, innovation, and community
@@ -598,7 +619,7 @@ stakeholders, and emerging changemakers.
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
                       { label: 'Date', value: 'Nov 7, 2026', icon: Calendar },
-                      { label: 'Time', value: '9:00 AM', icon: Clock },
+                      { label: 'Time', value: '10:00 AM', icon: Clock },
                       { label: 'Venue', value: 'Padel Zone', fullValue: 'Padel Zone, Labone', icon: MapPin },
                     ].map((info) => {
                       const InfoIcon = info.icon;
@@ -611,10 +632,10 @@ stakeholders, and emerging changemakers.
                                 <InfoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                               </div>
                               <div className="min-w-0">
-                                <span className="font-nexa text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block truncate">
+                                <span className="font-poppins text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block truncate">
                                   {info.label}
                                 </span>
-                                <span className="font-nexa text-sm font-black text-white block truncate" title={info.fullValue}>
+                                <span className="font-poppins text-sm font-black text-white block truncate" title={info.fullValue}>
                                   {info.fullValue ? (
                                     <>
                                       <span className="sm:hidden">{info.fullValue}</span>
@@ -645,7 +666,7 @@ stakeholders, and emerging changemakers.
                       <span className="block font-boldonse text-base sm:text-2xl text-[#83D318] leading-tight">
                         {stat.value}
                       </span>
-                      <span className="block mt-1 font-nexa text-[9px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                      <span className="block mt-1 font-poppins text-[9px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                         {stat.label}
                       </span>
                     </div>
@@ -662,7 +683,7 @@ stakeholders, and emerging changemakers.
                   <button
                     ref={setHeroCtaEl}
                     onClick={() => handleBuyTicket(ticketTiers[0])}
-                    className="absolute -top-4 -right-2 sm:-top-5 sm:-right-4 z-20 py-3.5 px-6 sm:px-7 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-nexa text-base sm:text-lg uppercase tracking-wider font-black rounded-xl shadow-2xl border-2 border-[#10324B] flex items-center justify-center gap-2.5 transform rotate-3 hover:rotate-0 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
+                    className="absolute -top-4 -right-2 sm:-top-5 sm:-right-4 z-20 py-3.5 px-6 sm:px-7 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-poppins text-base sm:text-lg uppercase tracking-wider font-black rounded-xl shadow-2xl border-2 border-[#10324B] flex items-center justify-center gap-2.5 transform rotate-3 hover:rotate-0 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
                   >
                     <Ticket className="w-5 h-5 text-[#10324B]" />
                     <span>Get Tickets</span>
@@ -681,17 +702,17 @@ stakeholders, and emerging changemakers.
                     <div className="absolute inset-0 bg-gradient-to-t from-[#10324B]/95 via-black/20 to-transparent"></div>
 
                     {/* Live matches chip */}
-                    {/* <div className="absolute top-16 sm:top-5 left-5 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#10324B]/85 backdrop-blur-md border border-white/15 font-nexa text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-white shadow-lg">
+                    {/* <div className="absolute top-16 sm:top-5 left-5 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#10324B]/85 backdrop-blur-md border border-white/15 font-poppins text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-white shadow-lg">
                       <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                       Live Padel Matches
                     </div> */}
 
                     <div className="absolute bottom-5 left-5 right-5 p-4 rounded-xl bg-[#10324B]/90 backdrop-blur-md border border-white/10 flex items-center justify-between gap-3 shadow-xl">
                       <div className="min-w-0">
-                        <span className="font-nexa text-[10px] uppercase tracking-wider text-[#83D318] font-bold block">
+                        <span className="font-poppins text-[10px] uppercase tracking-wider text-[#83D318] font-bold block">
                           Africa's Tech Lifestyle Experience
                         </span>
-                        <h3 className="font-nexa text-sm sm:text-base font-bold text-white uppercase tracking-tight">
+                        <h3 className="font-poppins text-sm sm:text-base font-bold text-white uppercase tracking-tight">
                           Play4Impact 2026 - Padel Edition
                         </h3>
                       </div>
@@ -709,8 +730,8 @@ stakeholders, and emerging changemakers.
                       <TrendingUp className="w-4 h-4" />
                     </div>
                     <div className="leading-tight">
-                      <span className="block font-nexa text-[10px] font-extrabold uppercase tracking-wider text-[#005461]">Investor Mixer</span>
-                      <span className="block font-nexa text-sm font-black">Investors & Networking</span>
+                      <span className="block font-poppins text-[10px] font-extrabold uppercase tracking-wider text-[#005461]">Investor Mixer</span>
+                      <span className="block font-poppins text-sm font-black">Investors & Networking</span>
                     </div>
                   </div>
 
@@ -719,8 +740,8 @@ stakeholders, and emerging changemakers.
                       <HeartPulse className="w-4 h-4" />
                     </div>
                     <div className="leading-tight">
-                      <span className="block font-nexa text-[10px] font-extrabold uppercase tracking-wider text-[#83D318]">Wellness</span>
-                      <span className="block font-nexa text-sm font-black">Health Checks</span>
+                      <span className="block font-poppins text-[10px] font-extrabold uppercase tracking-wider text-[#83D318]">Wellness</span>
+                      <span className="block font-poppins text-sm font-black">Health Checks</span>
                     </div>
                   </div>
                   */}
@@ -765,7 +786,7 @@ stakeholders, and emerging changemakers.
                 <Sparkles className="w-4 h-4" />
                 <span>Official Ticket Passes</span>
               </div> */}
-              <h2 className="font-nexa text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
+              <h2 className="font-poppins text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
                 Choose Your <span className="text-[#83D318]">Pass Tier</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
@@ -789,7 +810,7 @@ stakeholders, and emerging changemakers.
             {/* Group passes */}
             <div className="mt-20 text-center space-y-2">
               <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">Group Passes</span>
-              <h3 className="font-nexa text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+              <h3 className="font-poppins text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
                 Bring Your Crew <span className="text-[#83D318]">&amp; Save</span>
               </h3>
             </div>
@@ -807,7 +828,7 @@ stakeholders, and emerging changemakers.
               <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                 Ecosystem Framework
               </span>
-              <h2 className="font-nexa pt-3 text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
+              <h2 className="font-poppins pt-6 text-3xl sm:text-5xl font-black text-white uppercase tracking-tight">
                 The Five <span className="text-[#83D318]">Play4Impact Pillars</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
@@ -823,35 +844,35 @@ stakeholders, and emerging changemakers.
                   title: 'Wellness & Play',
                   desc: 'Physical wellness, active living, workplace health, and community building through sport.',
                   icon: HeartPulse,
-                  focus: ['Physical Wellness', 'Active Living', 'Workplace Health', 'Recreational Sport'],
+                  focus: ['Physical Wellness', 'Active Living', 'Workplace Health', 'Community Building Through Sport', 'Recreational Sport'],
                 },
                 {
                   number: '02',
                   title: 'Innovation & Technology',
                   desc: 'Artificial intelligence, digital transformation, tech careers, ecosystems, and future of work.',
                   icon: Zap,
-                  focus: ['Artificial Intelligence', 'Digital Transformation', 'Tech Careers', 'Digital Skills'],
+                  focus: ['Artificial Intelligence', 'Digital Transformation', 'Innovation Ecosystems', 'Future of Work', 'Digital Skills'],
                 },
                 {
                   number: '03',
                   title: 'Wealth & Opportunity',
                   desc: 'Entrepreneurship, wealth building, investment readiness, career development, and business growth.',
                   icon: Crown,
-                  focus: ['Entrepreneurship', 'Wealth Building', 'Investment Readiness', 'Business Growth'],
+                  focus: ['Entrepreneurship', 'Wealth Building', 'Investment Readiness', 'Career Development', 'Business Growth'],
                 },
                 {
                   number: '04',
                   title: 'Community & Impact',
                   desc: 'Social impact, youth empowerment, community development, volunteerism, and sustainability.',
                   icon: Users,
-                  focus: ['Social Impact', 'Youth Empowerment', 'Sustainability', 'Leadership'],
+                  focus: ['Social Impact', 'Youth Empowerment', 'Community Development', 'Volunteerism', 'Sustainability', 'Leadership'],
                 },
                 {
                   number: '05',
                   title: 'Global Connections',
                   desc: 'Strategic partnerships, diaspora engagement, international collaboration, and knowledge exchange.',
                   icon: Globe,
-                  focus: ['Diaspora Engagement', 'Global Talent', 'Investment Promotion', 'Cross-Border Deals'],
+                  focus: ['Strategic Partnerships', 'Diaspora Engagement', 'International Collaboration', 'Global Talent', 'Investment Promotion', 'Cross-Border Deals'],
                 },
               ].map((pillar, idx) => {
                 const IconComponent = pillar.icon;
@@ -875,19 +896,19 @@ stakeholders, and emerging changemakers.
                       <div className="w-12 h-12 rounded-2xl bg-[#83D318] text-[#10324B] flex items-center justify-center shadow-[0_8px_24px_-8px_rgba(131,211,24,0.6)] transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      <span className="font-nexa text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                      <span className="font-poppins text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                         Pillar {pillar.number}
                       </span>
                     </div>
 
-                    <h3 className="relative mt-6 font-nexa text-lg font-black text-white uppercase tracking-tight leading-snug">
+                    <h3 className="relative mt-6 min-h-[2lh] font-poppins text-lg font-black text-white uppercase tracking-tight leading-snug">
                       {pillar.title}
                     </h3>
                     {/* <p className="relative mt-2 text-sm text-slate-300 leading-relaxed">
                       {pillar.desc}
                     </p> */}
 
-                    <ul className="relative mt-auto pt-3 flex flex-wrap gap-2">
+                    <ul className="relative pt-4 flex flex-wrap gap-2">
                       {pillar.focus.map((item, fIdx) => (
                         <li
                           key={fIdx}
@@ -913,17 +934,17 @@ stakeholders, and emerging changemakers.
                 <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                   Target Audience
                 </span>
-                <h2 className="font-nexa text-3xl pt-3 sm:text-5xl font-black text-white uppercase tracking-tight leading-tight">
+                <h2 className="font-poppins text-3xl pt-6 sm:text-5xl font-black text-white uppercase tracking-tight leading-tight">
                   Who Attends <span className="text-[#83D318]">Play4Impact?</span>
                 </h2>
                 <p className="text-slate-200 text-base leading-relaxed">
-                  The event brings together <strong>300+ participants</strong> from Ghana, West Africa, and global diaspora networks including: professionals, founders, cooporate executives, CEOs and investors, everyday tech professionals, and people just starting out in tech. Everyone comes to share ideas, build partnerships, and grow together.
+                  The event brings together <strong>300+ participants</strong> from Ghana, West Africa, and global diaspora networks including: professionals, founders, corporate executives, CEOs, investors and innovators.
                 </p>
 
                 {/* <div className="p-6 rounded-2xl bg-[#005461]/60 border border-[#83D318]/40 shadow-xl space-y-3">
                   <div className="flex items-center gap-3">
                     <Trophy className="w-6 h-6 text-[#83D318]" />
-                    <h4 className="font-nexa text-lg font-black text-white uppercase">Open To The Whole Tech Community</h4>
+                    <h4 className="font-poppins text-lg font-black text-white uppercase">Open To The Whole Tech Community</h4>
                   </div>
                   <p className="text-xs text-slate-200 leading-relaxed">
                     Whether you're a founder, a VC partner, a developer shipping code every day, or someone curious about breaking into tech, Play4Impact creates an organic, high-energy space for real conversations and lifelong connections.
@@ -935,11 +956,11 @@ stakeholders, and emerging changemakers.
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     { title: 'Tech Founders & Entrepreneurs', desc: 'Building high-growth startups and digital solutions across Africa.', icon: Zap },
-                    { title: 'Corporate Executives & Titans', desc: 'C-suite leaders seeking strategic partnerships & workplace wellness.', icon: Briefcase },
+                    { title: 'Corporate Executives ', desc: 'C-suite leaders seeking strategic partnerships & workplace wellness.', icon: Briefcase },
                     { title: 'Investors & VC Partners', desc: 'Angel investors and venture funds exploring early & growth-stage deals.', icon: TrendingUp },
                     { title: 'Diaspora Professionals', desc: 'Global Ghanaian & African diaspora stakeholders driving investment & talent.', icon: Globe },
                     { title: 'Government & Public Sector', desc: 'Policy makers, innovation hubs & public sector representatives.', icon: Building2 },
-                    { title: 'Emerging Talent & Leaders', desc: 'Future tech leaders, innovators & high-potential ecosystem changemakers.', icon: Award },
+                    { title: 'Emerging Talent & Leaders', desc: 'Future leaders, innovators & high-potential ecosystem changemakers.', icon: Award },
                     { title: 'Professionals', desc: 'Engineers, creatives and everyone in between building their careers.', icon: Laptop },
                     // { title: 'Beginners & Tech Enthusiasts', desc: 'Students, career switchers & anyone curious about tech. No experience needed.', icon: Seedling },
                   ].map((group, idx) => {
@@ -953,7 +974,7 @@ stakeholders, and emerging changemakers.
                           <GroupIcon className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="font-nexa text-sm font-black text-white uppercase tracking-tight">
+                          <h4 className="font-poppins text-sm font-black text-white uppercase tracking-tight">
                             {group.title}
                           </h4>
                           <p className="text-xs text-slate-300 mt-1 leading-relaxed">
@@ -978,7 +999,7 @@ stakeholders, and emerging changemakers.
               <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                 Ecosystem Support
               </span>
-              <h2 className="font-nexa text-3xl pt-3 sm:text-5xl font-black text-white uppercase tracking-tight">
+              <h2 className="font-poppins text-3xl pt-3 sm:text-5xl font-black text-white uppercase tracking-tight">
                 Event Partners & <span className="text-[#83D318]">Sponsors</span>
               </h2>
               <p className="text-slate-300 text-base sm:text-lg">
@@ -1011,10 +1032,10 @@ stakeholders, and emerging changemakers.
                     </div>
 
                     <div className="w-full px-1">
-                      <h4 className="font-nexa text-xs font-black text-white uppercase group-hover:text-[#83D318] transition-colors truncate">
+                      <h4 className="font-poppins text-xs font-black text-white uppercase group-hover:text-[#83D318] transition-colors truncate">
                         {sponsor.name}
                       </h4>
-                      <span className="font-nexa text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block truncate mt-0.5">
+                      <span className="font-poppins text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block truncate mt-0.5">
                         {sponsor.category}
                       </span>
                     </div>
@@ -1036,11 +1057,11 @@ stakeholders, and emerging changemakers.
                   <span className="px-3 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-md uppercase tracking-wider">
                     Partnership Opportunities
                   </span>
-                  <h3 className="font-nexa text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+                  <h3 className="font-poppins text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
                     Let’s Play4Impact <span className="text-[#83D318]">Together!</span>
                   </h3>
                   <p className="text-slate-200 text-sm leading-relaxed">
-                    Interested in sponsoring, hosting a startup demo booth, or securing corporate player slots for your company? Fill out our quick partnership form. It takes about 2 minutes, and our Partnership & Growth team will get back to you.
+                    Interested in sponsoring, hosting a startup demo, or securing corporate player slots for your company? Fill out our quick partnership form. It takes about 2 minutes, and our Partnership & Growth team will get back to you.
                   </p>
                 </div>
 
@@ -1050,7 +1071,7 @@ stakeholders, and emerging changemakers.
                     <span className="text-[10px] font-extrabold uppercase text-[#83D318] tracking-widest block">
                       Partnership / Growth Lead
                     </span>
-                    <h4 className="font-nexa text-xl font-black text-white uppercase">Abena Adoma</h4>
+                    <h4 className="font-poppins text-xl font-black text-white uppercase">Abena Adoma</h4>
                   </div>
 
                   <div className="space-y-2 text-xs font-semibold text-slate-200 border-t border-white/10 pt-3">
@@ -1073,7 +1094,7 @@ stakeholders, and emerging changemakers.
                   <a
                     href={PARTNERSHIP_FORM_URL || PARTNERSHIP_MAILTO}
                     {...(PARTNERSHIP_FORM_URL ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="w-full py-3 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-nexa text-xs font-black uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-105"
+                    className="w-full py-3 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-poppins text-xs font-black uppercase tracking-wider rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform hover:scale-105"
                   >
                     <span>Become a Partner</span>
                     <ArrowRight className="w-4 h-4" />
@@ -1092,7 +1113,7 @@ stakeholders, and emerging changemakers.
               <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">
                 Got Questions?
               </span>
-              <h2 className="font-nexa text-3xl font-black text-white uppercase">Frequently Asked Questions</h2>
+              <h2 className="font-poppins text-3xl font-black text-white uppercase">Frequently Asked Questions</h2>
             </div>
 
             <div className="space-y-4">
