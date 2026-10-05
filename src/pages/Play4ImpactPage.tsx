@@ -24,11 +24,16 @@ import {
   FaBuildingColumns as Building2,
   FaArrowTrendUp as TrendingUp,
   FaLaptopCode as Laptop,
+  FaShirt as Shirt,
   // FaSeedling as Seedling, // re-enable with the "Beginners & Tech Enthusiasts" audience card
 } from 'react-icons/fa6';
 import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
 import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
 import { useAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
+
+// Event start: Sat 7 Nov 2026, 10:00 AM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
+// Keep the ISO format exact (two-digit hour); a typo here makes the countdown show all zeros.
+const EVENT_START = new Date('2026-11-07T10:00:00Z');
 
 // Google Form for partnership sign-ups. Paste the form's share link here;
 // until then the partnership button falls back to email.
@@ -57,6 +62,10 @@ const faqs = [
     a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Padel Zone, Labone - Accra, Ghana.',
   },
   {
+    q: 'Is there a dress code?',
+    a: 'Yes! The dress code is Play4Impact Whites: white + a touch of Play4Impact colour.',
+  },
+  {
     q: 'Will food be provided?',
     a: 'Your ticket includes complimentary drinks and water. Food will be available for purchase from our food vendors.',
   },
@@ -71,9 +80,10 @@ const eventPartners: { name: string; category: string; logo: string; darkTile?: 
   { name: 'Lyvv Cosmetics', category: 'Official Selfcare Partner', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
   { name: 'Media For Us', category: 'Media Partner', logo: '/images/p4i/sponsors/media-for-us.png' },
   { name: 'YFM Ghana', category: 'Media Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
+  { name: 'Sporty FM', category: 'Media Partner', logo: '/images/p4i/sponsors/sporty-fm.png' },
   { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
   { name: 'Stella Artois', category: 'Official Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
-  { name: 'Decathlon', category: 'Sports Partner', logo: '/images/p4i/sponsors/decathlon.svg' },
+  { name: 'Decathlon', category: 'Sports Partner', logo: '/images/p4i/sponsors/decathlon-logo.png' },
   { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
   { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.png', darkTile: true },
   { name: 'MX24 TV', category: 'Media Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
@@ -102,7 +112,7 @@ const highlightsStories = [
     access: 'All Passes Access',
     title: 'Digital Demos & Innovation Zone',
     desc: 'Explore new digital products and AI tools from top tech teams.',
-    image: '/images/p4i/networking.jpg',
+    image: '/images/p4i/innovation-demos.jpg',
   },
   // {
   //   id: 4,
@@ -118,7 +128,7 @@ const highlightsStories = [
     access: 'All Passes Access',
     title: 'Networking & Entertainment',
     desc: 'Enjoy curated soothing playlists between matches while connecting with like-minded individuals.',
-    image: '/images/p4i/clubhouse.jpg',
+    image: '/images/p4i/courtside-lounge.jpg',
   },
   {
     id: 5,
@@ -373,23 +383,19 @@ export const Play4ImpactPage: React.FC = () => {
     return () => observer.disconnect();
   }, [heroCtaEl]);
 
-  // Real-time Countdown timer targeting November 7, 2026
+  // Real-time Countdown timer to the event start (EVENT_START)
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const targetDate = new Date('2026-11-07T010:00:00Z').getTime();
+    const targetDate = EVENT_START.getTime();
 
     const updateCountdown = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        setTimeLeft({ days, hours, minutes, seconds });
-      }
+      const difference = Math.max(0, targetDate - Date.now()); // stays at 0 once the event starts
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      setTimeLeft({ days, hours, minutes, seconds });
     };
 
     updateCountdown();
@@ -605,7 +611,7 @@ export const Play4ImpactPage: React.FC = () => {
                 </h1>
 
                 <p className="font-poppins text-slate-200 text-base sm:text-lg font-normal leading-relaxed max-w-xl pt-2">
-                 Play41mpact 2026 is a premier ecosystem
+                 Play4Impact is a premier ecosystem
 engagement platform that leverages sport,
 wellness, networking, innovation, and community
 engagement to bring together professionals,
@@ -651,6 +657,21 @@ stakeholders, and emerging changemakers.
                         </div>
                       );
                     })}
+                  </div>
+                </div>
+
+                {/* Dress code */}
+                <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 border border-white/15">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white text-[#10324B] flex items-center justify-center shrink-0 shadow-md">
+                    <Shirt className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-poppins text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block">
+                      Dress Code: Play4Impact Whites
+                    </span>
+                    <span className="font-poppins text-sm font-semibold text-white block">
+                      White + a touch of Play4Impact colour.
+                    </span>
                   </div>
                 </div>
 
@@ -1057,7 +1078,7 @@ stakeholders, and emerging changemakers.
                   <span className="px-3 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-md uppercase tracking-wider">
                     Partnership Opportunities
                   </span>
-                  <h3 className="font-poppins text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
+                  <h3 className="font-poppins pt-3 text-3xl sm:text-4xl font-black text-white uppercase tracking-tight">
                     Let’s Play4Impact <span className="text-[#83D318]">Together!</span>
                   </h3>
                   <p className="text-slate-200 text-sm leading-relaxed">

@@ -60,7 +60,7 @@ export const ticketTiers: TicketTier[] = [
     tagline: 'Deluxe',
     features: [
       'Priority check-in',
-      'Complimentary beverages (Drinks, Water & Snacks)',
+      'Complimentary beverages (Drinks, Water & Snack)',
       'Priority access to watch padel matches',
       'Access to partner / innovation zones',
       'Access to health checks',
