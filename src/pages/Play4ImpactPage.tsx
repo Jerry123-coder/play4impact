@@ -71,23 +71,50 @@ const faqs = [
   },
 ];
 
-// Event partners & sponsors (all Ghana-based or active in Ghana).
-// darkTile: logo is white/light and needs a dark background to be visible.
-const eventPartners: { name: string; category: string; logo: string; darkTile?: boolean }[] = [
+// Event partners & sponsors (all Ghana-based or active in Ghana), shown in two sliding rows.
+// tileBg: background for logos that are white/light (or need their brand colour); default is white.
+interface Partner {
+  name: string;
+  category: string;
+  logo: string;
+  tileBg?: string;
+}
+
+// Row 1: sponsors, official, institutional, media & production partners
+const eventPartners: Partner[] = [
   { name: 'Diaspora Affairs', category: 'Institutional Partner', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
   { name: 'Ghana Fintech & Payments Association ', category: 'Institutional Partner', logo: '/images/p4i/sponsors/ghana-fintech.png' },
   { name: 'R&R Wellness', category: 'Official Wellness Partner', logo: '/images/p4i/sponsors/rr-wellness-logo.png' },
   { name: 'Lyvv Cosmetics', category: 'Official Selfcare Partner', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
+  { name: 'Stella Artois', category: 'Official Beverage Partner', logo: '/images/p4i/sponsors/stella-artois-logo.png', tileBg: '#EA1C31' },
+  { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
+  { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
+  { name: 'Decathlon', category: 'Sports Partner', logo: '/images/p4i/sponsors/decathlon-logo.png' },
+  { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.png', tileBg: '#10324B' },
   { name: 'Media For Us', category: 'Media Partner', logo: '/images/p4i/sponsors/media-for-us.png' },
   { name: 'YFM Ghana', category: 'Media Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
   { name: 'Sporty FM', category: 'Media Partner', logo: '/images/p4i/sponsors/sporty-fm.png' },
-  { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
-  { name: 'Stella Artois', category: 'Official Beverage Partner', logo: '/images/p4i/sponsors/stella-artois.svg' },
-  { name: 'Decathlon', category: 'Sports Partner', logo: '/images/p4i/sponsors/decathlon-logo.png' },
-  { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
-  { name: 'Awake Water', category: 'Hydration Partner', logo: '/images/p4i/sponsors/awake-water.png', darkTile: true },
   { name: 'MX24 TV', category: 'Media Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
   { name: 'B&FT', category: 'Media Partner', logo: '/images/p4i/sponsors/bft.png' },
+  { name: 'Inomotech', category: 'Event Branding Partner', logo: '/images/p4i/sponsors/inomotech.png' },
+  { name: 'goivents', category: 'Technology Partner', logo: '/images/p4i/sponsors/goivents.png' },
+  { name: 'DP Lighting', category: 'Experience Partner', logo: '/images/p4i/sponsors/dp-lighting.png' },
+  { name: 'Leti Afa', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/leti-afa-logo.png', tileBg: '#10324B' },
+];
+
+// Row 2: community partners
+const communityPartners: Partner[] = [
+  { name: 'Global Shapers Accra Hub', category: 'Community Partner', logo: '/images/p4i/sponsors/global-shapers-accra.png' },
+  { name: 'SpaceX', category: 'Community Partner', logo: '/images/p4i/sponsors/spacex.png', tileBg: '#0B0B0B' },
+  { name: 'Active Accra Club', category: 'Community Partner', logo: '/images/p4i/sponsors/active-accra.png', tileBg: '#1F222B' },
+  { name: '7even Sports', category: 'Community Partner', logo: '/images/p4i/sponsors/7even-sports.png', tileBg: '#000000' },
+  { name: 'Because She Can', category: 'Community Partner', logo: '/images/p4i/sponsors/because-she-can.png' },
+  { name: 'Ladies In Design Network', category: 'Community Partner', logo: '/images/p4i/sponsors/ladies-in-design-network.png' },
+  { name: 'Developers In Vogue', category: 'Community Partner', logo: '/images/p4i/sponsors/developers-in-vogue.png' },
+  { name: 'Valorcity Wellness Club', category: 'Community Partner', logo: '/images/p4i/sponsors/valorcity.png', tileBg: '#1F222B' },
+  { name: 'Tema Run Club', category: 'Community Partner', logo: '/images/p4i/sponsors/tema-run-club.png' },
+  { name: 'Runner Alliance', category: 'Community Partner', logo: '/images/p4i/sponsors/runner-alliance.png', tileBg: '#1F222B' },
+  { name: 'Buro gh', category: 'Community Partner', logo: '/images/p4i/sponsors/buro.png', tileBg: '#000000' },
 ];
 
 const highlightsStories = [
@@ -1033,33 +1060,41 @@ stakeholders, and emerging changemakers.
               <div className="absolute top-0 bottom-0 left-0 w-24 z-10 bg-gradient-to-r from-[#0B1E2B] via-[#0B1E2B]/80 to-transparent pointer-events-none" />
               <div className="absolute top-0 bottom-0 right-0 w-24 z-10 bg-gradient-to-l from-[#0B1E2B] via-[#0B1E2B]/80 to-transparent pointer-events-none" />
 
-              <div className="animate-marquee-flow flex gap-5 items-center">
-                {[...eventPartners, ...eventPartners].map((sponsor, sIdx) => (
-                  <div
-                    key={sIdx}
-                    className="w-56 sm:w-64 shrink-0 p-4 rounded-3xl bg-[#004753]/50 border border-white/10 hover:border-[#83D318]/70 transition-all duration-300 flex flex-col items-center justify-between text-center space-y-3 shadow-xl backdrop-blur-md group hover:bg-[#005461]/80 hover:-translate-y-1 cursor-pointer"
-                  >
-                    <div
-                      className={`w-full h-24 rounded-2xl px-4 py-3 flex items-center justify-center shadow-inner group-hover:scale-[1.03] transition-transform duration-300 overflow-hidden border ${
-                        sponsor.darkTile ? 'bg-[#10324B] border-white/10' : 'bg-white border-slate-100'
-                      }`}
-                    >
-                      <img
-                        src={sponsor.logo}
-                        alt={sponsor.name}
-                        loading="lazy"
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
+              <div className="space-y-5">
+                {[
+                  { partners: eventPartners, animation: 'animate-marquee-flow' },
+                  { partners: communityPartners, animation: 'animate-marquee-reverse-flow' },
+                ].map(({ partners, animation }, rowIdx) => (
+                  <div key={rowIdx} className={`${animation} flex gap-5 items-center`}>
+                    {/* list twice for a seamless loop */}
+                    {[...partners, ...partners].map((sponsor, sIdx) => (
+                      <div
+                        key={sIdx}
+                        aria-hidden={sIdx >= partners.length}
+                        className="w-56 sm:w-64 shrink-0 p-4 rounded-3xl bg-[#004753]/50 border border-white/10 hover:border-[#83D318]/70 transition-all duration-300 flex flex-col items-center justify-between text-center space-y-3 shadow-xl backdrop-blur-md group hover:bg-[#005461]/80 hover:-translate-y-1 cursor-pointer"
+                      >
+                        <div
+                          className="w-full h-24 rounded-2xl px-4 py-3 flex items-center justify-center shadow-inner group-hover:scale-[1.03] transition-transform duration-300 overflow-hidden border border-white/10"
+                          style={{ backgroundColor: sponsor.tileBg ?? '#FFFFFF' }}
+                        >
+                          <img
+                            src={sponsor.logo}
+                            alt={sponsor.name}
+                            loading="lazy"
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
 
-                    <div className="w-full px-1">
-                      <h4 className="font-poppins text-xs font-black text-white uppercase group-hover:text-[#83D318] transition-colors truncate">
-                        {sponsor.name}
-                      </h4>
-                      <span className="font-poppins text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block truncate mt-0.5">
-                        {sponsor.category}
-                      </span>
-                    </div>
+                        <div className="w-full px-1">
+                          <h4 className="font-poppins text-xs font-black text-white uppercase group-hover:text-[#83D318] transition-colors truncate">
+                            {sponsor.name}
+                          </h4>
+                          <span className="font-poppins text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block mt-0.5 leading-snug line-clamp-2 min-h-[2lh]">
+                            {sponsor.category}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>

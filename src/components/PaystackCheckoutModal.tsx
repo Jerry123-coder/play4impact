@@ -18,6 +18,14 @@ import { useAvailability, fetchAvailability, passesLeft, LOW_STOCK_THRESHOLD } f
 
 export type { TicketTier };
 
+// Short, easy-to-read pass reference, e.g. P4I-7KQ2XM. The alphabet skips look-alike
+// characters (0/O, 1/I/L), and 6 random characters give ~887 million combinations.
+const REF_ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+const generatePassReference = () => {
+  const bytes = crypto.getRandomValues(new Uint8Array(6));
+  return 'P4I-' + Array.from(bytes, (b) => REF_ALPHABET[b % REF_ALPHABET.length]).join('');
+};
+
 interface PaystackCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -186,7 +194,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
       return;
     }
 
-    const reference = `P4I-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const reference = generatePassReference();
 
     const onSuccessfulPayment = (refCode: string) => {
       setLoading(false);

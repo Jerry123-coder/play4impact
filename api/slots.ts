@@ -3,7 +3,7 @@
 // Requires PAYSTACK_SECRET_KEY in Vercel → Settings → Environment Variables.
 // ?fresh=1 skips the CDN cache (used right before opening payment).
 
-const LIMITS = { general: 50, premium: 100, executive: 40 } as const;
+const LIMITS = { general: 50, premium: 120, executive: 40 } as const;
 type Pool = keyof typeof LIMITS;
 
 // Tier names exactly as recorded in Paystack metadata, including names used before renames.
