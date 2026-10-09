@@ -819,6 +819,72 @@ stakeholders, and emerging changemakers.
           </div>
         </section>
 
+        {/* WHY PLAY4IMPACT: the story behind the event */}
+        <section id="about" className="relative py-20 overflow-hidden bg-[#10324B]">
+          <div className="pointer-events-none absolute -left-40 top-1/3 w-[28rem] h-[28rem] rounded-full bg-[#83D318]/10 blur-3xl"></div>
+          <div className="pointer-events-none absolute -right-32 -top-20 w-96 h-96 rounded-full bg-[#005461]/40 blur-3xl"></div>
+
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+
+            {/* Left: heading + photo stack */}
+            <div className="lg:col-span-5 lg:sticky lg:top-28 self-start">
+              <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">Why Play4Impact</span>
+              <h2 className="font-boldonse mt-5 flex flex-col gap-2 sm:gap-3 text-3xl sm:text-4xl xl:text-5xl text-white leading-[1.3]">
+                <span>Beyond the</span>
+                <span className="text-[#83D318]">Conference</span>
+              </h2>
+              <p className="mt-5 text-lg sm:text-xl font-semibold text-slate-200 leading-snug">
+                Rethinking how professionals work, connect and play.
+              </p>
+
+              <div className="relative mt-10 mb-6 mx-2 sm:mx-6 lg:mx-0 h-56 sm:h-72">
+                <div className="absolute inset-y-4 left-6 right-0 translate-x-3 translate-y-3 rounded-[1.75rem] bg-[#83D318]"></div>
+                <img
+                  src="/images/p4i/courtside-lounge.jpg"
+                  alt="Attendees relaxing courtside between padel matches"
+                  loading="lazy"
+                  className="absolute inset-y-4 left-6 right-0 w-[calc(100%-1.5rem)] h-[calc(100%-2rem)] object-cover rounded-[1.75rem] ring-1 ring-white/10 shadow-2xl"
+                />
+                <img
+                  src="/images/p4i/mixer.jpg"
+                  alt="Attendees connecting at the investor mixer"
+                  loading="lazy"
+                  className="absolute -left-2 -bottom-6 w-[46%] aspect-[4/3] object-cover rounded-2xl border-4 border-[#0E2A3F] shadow-2xl -rotate-6"
+                />
+                <span className="absolute -top-3 right-4 rotate-3 px-3 py-1.5 rounded-lg bg-[#F1F9E5] text-[#10324B] text-xs font-black uppercase tracking-wider shadow-lg">
+                  Play · Move · Connect
+                </span>
+              </div>
+            </div>
+
+            {/* Right: the story */}
+            <div className="lg:col-span-7 space-y-5 text-base text-slate-300 leading-relaxed lg:pt-10">
+              <p>
+                Play4Impact was created around a simple observation: professional and entrepreneurial life has become increasingly demanding, digital and fast-paced, yet many of the spaces created for professionals continue to rely on traditional conference formats.
+              </p>
+              <p className="text-lg sm:text-xl font-bold text-white">Play4Impact seeks to challenge that model.</p>
+              <p>The platform is built around five interconnected areas:</p>
+              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base sm:text-lg font-bold text-white">
+                {['Sports', 'Innovation', 'Wellness', 'Investment', 'Community'].map((area, i) => (
+                  <React.Fragment key={area}>
+                    {i > 0 && <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-[#83D318]"></span>}
+                    <span>{area}</span>
+                  </React.Fragment>
+                ))}
+              </p>
+              <p>
+                Together, these pillars create an environment where participants can step away from the conventional conference setting and engage through play, movement, conversation, discovery and collaboration.
+              </p>
+              <p>
+                The idea is not to remove the value of professional conversations, but to create a different environment in which those conversations can happen.
+              </p>
+              <blockquote className="border-l-2 border-[#83D318] pl-5 text-lg sm:text-xl font-semibold text-white leading-snug">
+                Some of the most valuable relationships can begin through a game, a shared experience, a casual conversation or simply spending time together outside the traditional professional setting.
+              </blockquote>
+            </div>
+          </div>
+        </section>
+
         {/* PILLARS / EXPERIENCE VISUAL HIGHLIGHTS */}
         <section id="highlights" className="py-20 bg-[#0A1F2E] overflow-hidden relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -872,46 +938,6 @@ stakeholders, and emerging changemakers.
         {/* THE 5 PLAY4IMPACT PILLARS */}
         <section id="pillars" className="py-24 bg-[#0A1F2E] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            {/* WHY PLAY4IMPACT: the story behind the event, leading into the pillars */}
-            <div id="about" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pb-20 mb-20 border-b border-white/10">
-              <div className="lg:col-span-5 lg:sticky lg:top-28 self-start">
-                <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">Why Play4Impact</span>
-                <h2 className="font-boldonse mt-5 flex flex-col gap-2 sm:gap-3 text-3xl sm:text-4xl xl:text-5xl text-white leading-[1.3]">
-                  <span>Beyond the</span>
-                  <span className="text-[#83D318]">Conference</span>
-                </h2>
-                <p className="mt-5 text-lg sm:text-xl font-semibold text-slate-200 leading-snug">
-                  Rethinking how professionals work, connect and play.
-                </p>
-              </div>
-
-              <div className="lg:col-span-7 space-y-6 text-base sm:text-lg text-slate-300 leading-relaxed">
-                <p>
-                  Play4Impact was created around a simple observation: professional and entrepreneurial life has become increasingly demanding, digital and fast-paced, yet many of the spaces created for professionals continue to rely on traditional conference formats.
-                </p>
-                <p className="text-xl sm:text-2xl font-bold text-white">Play4Impact seeks to challenge that model.</p>
-                <div className="space-y-3">
-                  <p>The platform is built around five interconnected areas:</p>
-                  <ul className="flex flex-wrap gap-2" aria-label="Five interconnected areas">
-                    {['Sports', 'Innovation', 'Wellness', 'Investment', 'Community'].map((area) => (
-                      <li key={area} className="px-4 py-1.5 rounded-full border border-[#83D318]/50 bg-[#83D318]/10 text-sm font-bold text-white">
-                        {area}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <p>
-                  Together, these pillars create an environment where participants can step away from the conventional conference setting and engage through play, movement, conversation, discovery and collaboration.
-                </p>
-                <p>
-                  The idea is not to remove the value of professional conversations, but to create a different environment in which those conversations can happen.
-                </p>
-                <blockquote className="border-l-4 border-[#83D318] pl-5 text-xl sm:text-2xl font-semibold text-white leading-snug">
-                  Some of the most valuable relationships can begin through a game, a shared experience, a casual conversation or simply spending time together outside the traditional professional setting.
-                </blockquote>
-              </div>
-            </div>
 
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
               <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
