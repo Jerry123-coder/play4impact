@@ -872,6 +872,47 @@ stakeholders, and emerging changemakers.
         {/* THE 5 PLAY4IMPACT PILLARS */}
         <section id="pillars" className="py-24 bg-[#0A1F2E] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            {/* WHY PLAY4IMPACT: the story behind the event, leading into the pillars */}
+            <div id="about" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 pb-20 mb-20 border-b border-white/10">
+              <div className="lg:col-span-5 lg:sticky lg:top-28 self-start">
+                <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">Why Play4Impact</span>
+                <h2 className="font-boldonse mt-5 flex flex-col gap-2 sm:gap-3 text-3xl sm:text-4xl xl:text-5xl text-white leading-[1.3]">
+                  <span>Beyond the</span>
+                  <span className="text-[#83D318]">Conference</span>
+                </h2>
+                <p className="mt-5 text-lg sm:text-xl font-semibold text-slate-200 leading-snug">
+                  Rethinking how professionals work, connect and play.
+                </p>
+              </div>
+
+              <div className="lg:col-span-7 space-y-6 text-base sm:text-lg text-slate-300 leading-relaxed">
+                <p>
+                  Play4Impact was created around a simple observation: professional and entrepreneurial life has become increasingly demanding, digital and fast-paced, yet many of the spaces created for professionals continue to rely on traditional conference formats.
+                </p>
+                <p className="text-xl sm:text-2xl font-bold text-white">Play4Impact seeks to challenge that model.</p>
+                <div className="space-y-3">
+                  <p>The platform is built around five interconnected areas:</p>
+                  <ul className="flex flex-wrap gap-2" aria-label="Five interconnected areas">
+                    {['Sports', 'Innovation', 'Wellness', 'Investment', 'Community'].map((area) => (
+                      <li key={area} className="px-4 py-1.5 rounded-full border border-[#83D318]/50 bg-[#83D318]/10 text-sm font-bold text-white">
+                        {area}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <p>
+                  Together, these pillars create an environment where participants can step away from the conventional conference setting and engage through play, movement, conversation, discovery and collaboration.
+                </p>
+                <p>
+                  The idea is not to remove the value of professional conversations, but to create a different environment in which those conversations can happen.
+                </p>
+                <blockquote className="border-l-4 border-[#83D318] pl-5 text-xl sm:text-2xl font-semibold text-white leading-snug">
+                  Some of the most valuable relationships can begin through a game, a shared experience, a casual conversation or simply spending time together outside the traditional professional setting.
+                </blockquote>
+              </div>
+            </div>
+
             <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
               <span className="px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-md">
                 Ecosystem Framework

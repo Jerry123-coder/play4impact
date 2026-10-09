@@ -23,6 +23,7 @@ const promoCodeHashes: Record<string, PromoCode> = {
   '5f6becf8d193a8f5143b72c82417f96f1dbebf25e9e8041c28cb2d351dd3d0f3': { percent: 12, community: 'Tema Run Club' },
   '3abf80a0bea6c3c162e3382258f9c755f53e6abe06caece7abafede1a9f59ac3': { percent: 12, community: 'Buro gh' },
   '659c850bc30e74913a87db3733e9eda0174b72601a955ac22d6ae16f660eb4c7': { percent: 12, community: 'Runner Alliance' },
+  '1848588ec9396db66b23a612a1bd216bc9c98981228acba5aecd9d2c672dce57': { percent: 12, community: 'New partner (name pending)' },
 
   // 12% general code for other partners and Wellness Run participants
   'b6fc7ca0cc2aea5ab68ce2c9e5a7233a535174c722e0787fbcaa6044aa2d754e': { percent: 12, community: 'Partners & Wellness Run' },
