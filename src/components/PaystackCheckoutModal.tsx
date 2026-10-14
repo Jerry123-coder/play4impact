@@ -14,6 +14,7 @@ import {
 import toast from 'react-hot-toast';
 import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
 import { findPromoCode } from '../data/promoCodes';
+import { ROUTE_TICKET_SALES_TO_SUBACCOUNT, subaccountOptions } from '../data/paystack';
 import { useAvailability, fetchAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
 export type { TicketTier };
@@ -43,6 +44,8 @@ declare global {
         currency: string;
         ref: string;
         metadata?: Record<string, any>;
+        subaccount?: string;
+        bearer?: 'account' | 'subaccount';
         callback: (response: { reference: string; status: string; trans: string }) => void;
         onClose: () => void;
       }) => { openIframe: () => void };
@@ -231,6 +234,7 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
           amount: totalAmount * 100, // Pesewas
           currency: 'GHS',
           ref: reference,
+          ...(ROUTE_TICKET_SALES_TO_SUBACCOUNT ? subaccountOptions() : {}),
           metadata: {
             custom_fields: [
               { display_name: 'Purchaser Name', variable_name: 'purchaser_name', value: fullName },

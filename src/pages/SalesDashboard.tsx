@@ -9,6 +9,7 @@ import {
   FaTable as TableIcon,
   FaChartColumn as ChartIcon,
 } from 'react-icons/fa6';
+import { PaymentTestPanel } from '../components/PaymentTestPanel';
 
 // Internal sales dashboard (/dashboard). Data comes from /api/sales (Paystack), password-protected.
 
@@ -642,6 +643,9 @@ export const SalesDashboard: React.FC = () => {
                 </Card>
               </div>
             </div>
+
+            {/* Payment routing test */}
+            <PaymentTestPanel dashboardKey={key} />
 
             {/* Orders */}
             <Card
