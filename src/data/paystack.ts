@@ -3,9 +3,9 @@
 // It is not a secret: Paystack subaccount codes are meant to be sent from the browser.
 export const PAYSTACK_SUBACCOUNT = 'ACCT_0kvmpct6grnec45';
 
-// Live ticket sales only use the subaccount once this is true. Keep it false until an
-// admin GHS 1 test (/dashboard → Payment test) confirms the bank details are right.
-export const ROUTE_TICKET_SALES_TO_SUBACCOUNT = false;
+// All ticket sales are routed to the subaccount (nothing settles to the main account).
+// Confirm the bank details any time via /dashboard → Payment test.
+export const ROUTE_TICKET_SALES_TO_SUBACCOUNT = true;
 
 // Who pays Paystack's fee when a subaccount is used: 'subaccount' or 'account' (main account).
 export const SUBACCOUNT_FEE_BEARER: 'subaccount' | 'account' = 'subaccount';
