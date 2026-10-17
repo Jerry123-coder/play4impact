@@ -18,7 +18,7 @@ export interface TicketTier {
 export const peopleAdmitted = (tier: TicketTier) => tier.admits ?? 1;
 
 const generalFeatures = [
-  'Complimentary beverages (Drinks & Water)',
+  'Complimentary beverages (Unlimited Drinks & Water)',
   'Access to watch padel matches',
   'Access to partner / innovation zones',
   'Access to health checks',
@@ -31,6 +31,9 @@ const premiumFeatures = [
 ];
 
 // Single source of truth for ticket tiers (landing page + checkout modal)
+const vrExperience = 'Access to VR/ Immersive experiences on African cultural content';
+
+// Single list for every tier; VR experience is the last item on each card
 export const ticketTiers: TicketTier[] = [
   {
     id: 'basic',
@@ -38,7 +41,7 @@ export const ticketTiers: TicketTier[] = [
     name: 'General Pass',
     price: 250,
     tagline: 'Basic',
-    features: generalFeatures,
+    features: [...generalFeatures, vrExperience],
     color: 'green',
   },
   {
@@ -49,7 +52,7 @@ export const ticketTiers: TicketTier[] = [
     popular: true,
     badge: 'MOST POPULAR',
     tagline: 'Standard',
-    features: premiumFeatures,
+    features: [...premiumFeatures, vrExperience],
     color: 'blue',
   },
   {
@@ -59,15 +62,15 @@ export const ticketTiers: TicketTier[] = [
     price: 1000,
     tagline: 'Deluxe',
     features: [
-      'Priority check-in',
-      'Complimentary beverages (Drinks, Water & Snack)',
-      'Priority access to watch padel matches',
+      'Complimentary beverages (Unlimited Drinks, Snack & Water)',
+      'Access to watch padel matches',
       'Access to partner / innovation zones',
       'Access to health checks',
-      'Priority Access to Champions and Investor mixer',
       'Automatic member of P4I Clubhouse',
-      'Wellness treat by R&R',
+      'Access to Champions and Investor mixer',
+      '15mins recovery session by R&R Wellness',
       'P4I Lifestyle souvenir',
+      vrExperience,
     ],
     color: 'amber',
   },
@@ -80,7 +83,7 @@ export const ticketTiers: TicketTier[] = [
     admits: 3,
     badge: 'SAVE 50 GHS',
     tagline: 'One General Pass that admits 3 people.',
-    features: ['Admits 3 people', ...generalFeatures],
+    features: ['Admits 3 people', ...generalFeatures, vrExperience],
     color: 'green',
   },
   {
@@ -91,7 +94,7 @@ export const ticketTiers: TicketTier[] = [
     admits: 2,
     badge: 'SAVE 50 GHS',
     tagline: 'One Premium Pass that admits 2 people.',
-    features: ['Admits 2 people', ...premiumFeatures],
+    features: ['Admits 2 people', ...premiumFeatures, vrExperience],
     color: 'blue',
   },
 ];

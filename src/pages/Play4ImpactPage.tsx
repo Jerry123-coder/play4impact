@@ -31,9 +31,9 @@ import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
 import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
 import { useAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
-// Event start: Sat 7 Nov 2026, 10:00 AM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
+// Event start: Sat 7 Nov 2026, 12:00 PM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
 // Keep the ISO format exact (two-digit hour); a typo here makes the countdown show all zeros.
-const EVENT_START = new Date('2026-11-07T10:00:00Z');
+const EVENT_START = new Date('2026-11-07T12:00:00Z');
 
 // Google Form for partnership sign-ups. Paste the form's share link here;
 // until then the partnership button falls back to email.
@@ -59,7 +59,7 @@ const faqs = [
   },
   {
     q: 'Where and when is the event taking place?',
-    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Padel Zone, Labone - Accra, Ghana.',
+    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Padel Town, Aviation Social Center - Accra, Ghana.',
   },
   {
     q: 'Is there a dress code?',
@@ -84,8 +84,6 @@ interface Partner {
 const eventPartners: Partner[] = [
   { name: 'Diaspora Affairs', category: 'Institutional Partner', logo: '/images/p4i/sponsors/diaspora-affairs.png' },
   { name: 'Ghana Fintech & Payments Association ', category: 'Institutional Partner', logo: '/images/p4i/sponsors/ghana-fintech.png' },
-  { name: 'R&R Wellness', category: 'Official Wellness Partner', logo: '/images/p4i/sponsors/rr-wellness-logo.png' },
-  { name: 'Lyvv Cosmetics', category: 'Official Selfcare Partner', logo: '/images/p4i/sponsors/lyvv-cosmetics.png' },
   { name: 'Stella Artois', category: 'Official Beverage Partner', logo: '/images/p4i/sponsors/stella-artois-logo.png', tileBg: '#EA1C31' },
   { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
   { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
@@ -652,8 +650,8 @@ stakeholders, and emerging changemakers.
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
                       { label: 'Date', value: 'Nov 7, 2026', icon: Calendar },
-                      { label: 'Time', value: '10:00 AM', icon: Clock },
-                      { label: 'Venue', value: 'Padel Zone', fullValue: 'Padel Zone, Labone', icon: MapPin },
+                      { label: 'Time', value: '12:00 PM', icon: Clock },
+                      { label: 'Venue', value: 'Padel Town', fullValue: 'Padel Town, Aviation Social Center', icon: MapPin },
                     ].map((info) => {
                       const InfoIcon = info.icon;
                       return (
@@ -1296,7 +1294,7 @@ stakeholders, and emerging changemakers.
 
             <div className="text-center md:text-right text-slate-300 text-[11px]">
               <p>© 2026 Techies4Impact. All Rights Reserved.</p>
-              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Padel Zone, Labone - Accra</p>
+              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Padel Town, Aviation Social Center - Accra</p>
             </div>
 
           </div>

@@ -811,10 +811,10 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                 </div>
                 <div className="text-xs text-slate-300 space-y-1">
                   <span className="font-bold text-white block text-sm">
-                    Padel Zone Gate Entry Pass
+                    Padel Town Gate Entry Pass
                   </span>
                   <p className="text-[11px] text-slate-300">
-                    Present this pass reference or digital code at the Padel Zone gate in Labone - Accra for entry.
+                    Present this pass reference or digital code at the Padel Town gate, Aviation Social Center - Accra, for entry.
                   </p>
                 </div>
               </div>
