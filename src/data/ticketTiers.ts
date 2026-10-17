@@ -68,7 +68,7 @@ export const ticketTiers: TicketTier[] = [
       'Access to health checks',
       'Automatic member of P4I Clubhouse',
       'Access to Champions and Investor mixer',
-      '15mins recovery session by R&R Wellness',
+      '15mins recovery service by R&R Wellness',
       'P4I Lifestyle souvenir',
       vrExperience,
     ],
