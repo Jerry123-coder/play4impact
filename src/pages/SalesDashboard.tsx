@@ -20,7 +20,7 @@ interface Order {
   fees: number;
   currency: string;
   tier: string;
-  pool: 'general' | 'premium' | 'executive' | null;
+  pool: 'teaser' | 'general' | 'premium' | 'executive' | null;
   quantity: number;
   people: number;
   promoCode: string | null;
@@ -31,7 +31,7 @@ interface Order {
 
 interface SalesData {
   generatedAt: string;
-  limits: Record<'general' | 'premium' | 'executive', number>;
+  limits: Record<'teaser' | 'general' | 'premium' | 'executive', number>;
   orders: Order[];
 }
 
@@ -43,7 +43,7 @@ const RANGES: { id: RangeId; label: string; days: number | null }[] = [
   { id: 'today', label: 'Today', days: 1 },
 ];
 
-const POOL_LABELS = { general: 'General', premium: 'Premium', executive: 'Executive' } as const;
+const POOL_LABELS = { teaser: 'Teaser', general: 'General', premium: 'Premium', executive: 'Executive' } as const;
 const NO_CODE = 'No code (direct sales)';
 const KEY_STORAGE = 'p4i-dashboard-key';
 
@@ -389,7 +389,7 @@ export const SalesDashboard: React.FC = () => {
 
   // slot usage is always all-time (that's what the limits apply to)
   const poolSold = useMemo(() => {
-    const sold = { general: 0, premium: 0, executive: 0 };
+    const sold = { teaser: 0, general: 0, premium: 0, executive: 0 };
     for (const o of data?.orders ?? []) if (o.pool) sold[o.pool] += o.people;
     return sold;
   }, [data]);
@@ -521,7 +521,7 @@ export const SalesDashboard: React.FC = () => {
 
             {/* Slots */}
             <Card title="Ticket slots" subtitle="All-time · group passes use their parent tier's slots">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {(Object.keys(POOL_LABELS) as (keyof typeof POOL_LABELS)[]).map((p) => (
                   <SlotMeter key={p} label={POOL_LABELS[p]} sold={poolSold[p]} limit={data.limits[p]} />
                 ))}

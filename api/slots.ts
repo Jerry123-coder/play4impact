@@ -3,12 +3,13 @@
 // Requires PAYSTACK_SECRET_KEY in Vercel → Settings → Environment Variables.
 // ?fresh=1 skips the CDN cache (used right before opening payment).
 
-const LIMITS = { general: 50, premium: 120, executive: 40 } as const;
+const LIMITS = { teaser: 50, general: 50, premium: 120, executive: 40 } as const;
 type Pool = keyof typeof LIMITS;
 
 // Tier names exactly as recorded in Paystack metadata, including names used before renames.
 // Group passes draw from their parent tier's pool.
 const TIER_POOLS: Record<string, { pool: Pool; admits: number }> = {
+  'Teaser Pass': { pool: 'teaser', admits: 1 },
   'General Pass': { pool: 'general', admits: 1 },
   'General Pass (Triple Treat)': { pool: 'general', admits: 3 },
   'Basic Pass': { pool: 'general', admits: 1 },
@@ -25,7 +26,7 @@ interface CustomField {
 }
 
 const countSold = async (secret: string) => {
-  const sold: Record<Pool, number> = { general: 0, premium: 0, executive: 0 };
+  const sold: Record<Pool, number> = { teaser: 0, general: 0, premium: 0, executive: 0 };
 
   for (let page = 1; ; page++) {
     const res = await fetch(`https://api.paystack.co/transaction?status=success&perPage=100&page=${page}`, {

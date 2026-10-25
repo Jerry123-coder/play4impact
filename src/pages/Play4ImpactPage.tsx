@@ -28,7 +28,7 @@ import {
   // FaSeedling as Seedling, // re-enable with the "Beginners & Tech Enthusiasts" audience card
 } from 'react-icons/fa6';
 import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
-import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
+import { ticketTiers, peopleAdmitted, tierById, type TicketTier } from '../data/ticketTiers';
 import { useAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
 // Event start: Sat 7 Nov 2026, 12:00 PM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
@@ -381,7 +381,7 @@ const CountdownUnit: React.FC<{ value: number; label: string; highlight?: boolea
 );
 
 export const Play4ImpactPage: React.FC = () => {
-  const [selectedTier, setSelectedTier] = useState<TicketTier>(ticketTiers[1]); // Default Premium Pass
+  const [selectedTier, setSelectedTier] = useState<TicketTier>(tierById('standard')); // Default Premium Pass
   const [availability] = useAvailability(); // live ticket slots
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -465,7 +465,7 @@ export const Play4ImpactPage: React.FC = () => {
           </div>
 
           <div className="pt-2 border-t border-white/10 flex flex-wrap items-baseline gap-2">
-            <span className="text-4xl sm:text-5xl font-black text-[#83D318]">
+            <span className="text-4xl sm:text-5xl xl:text-[2.6rem] font-black text-[#83D318]">
               {tier.price}
             </span>
             <span className="text-lg font-bold text-slate-300">GHS</span>
@@ -564,7 +564,7 @@ export const Play4ImpactPage: React.FC = () => {
                 : 'opacity-0 scale-90 pointer-events-none -translate-y-2'
             }`}>
               <button
-                onClick={() => handleBuyTicket(ticketTiers[0])}
+                onClick={() => handleBuyTicket(tierById('basic'))}
                 className="py-2.5 px-5 sm:px-6 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-poppins text-xs sm:text-sm uppercase tracking-wider font-black rounded-xl shadow-lg border border-[#10324B] flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
               >
                 <Ticket className="w-4 h-4 text-[#10324B]" />
@@ -582,7 +582,7 @@ export const Play4ImpactPage: React.FC = () => {
               : 'opacity-0 scale-75 rotate-6 pointer-events-none'
           }`}>
             <button
-              onClick={() => handleBuyTicket(ticketTiers[0])}
+              onClick={() => handleBuyTicket(tierById('basic'))}
               className="relative py-2 px-4 bg-[#83D318] text-[#10324B] font-poppins text-[11px] uppercase tracking-wider font-black rounded-lg border-2 border-[#10324B] shadow-[3px_3px_0_#10324B] flex items-center gap-1.5 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none transition-all cursor-pointer whitespace-nowrap"
             >
               {/* Tape strip holding the sticker to the nav */}
@@ -727,7 +727,7 @@ stakeholders, and emerging changemakers.
 
                   <button
                     ref={setHeroCtaEl}
-                    onClick={() => handleBuyTicket(ticketTiers[0])}
+                    onClick={() => handleBuyTicket(tierById('basic'))}
                     className="absolute -top-4 -right-2 sm:-top-5 sm:-right-4 z-20 py-3.5 px-6 sm:px-7 bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] font-poppins text-base sm:text-lg uppercase tracking-wider font-black rounded-xl shadow-2xl border-2 border-[#10324B] flex items-center justify-center gap-2.5 transform rotate-3 hover:rotate-0 hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap"
                   >
                     <Ticket className="w-5 h-5 text-[#10324B]" />
@@ -914,7 +914,7 @@ stakeholders, and emerging changemakers.
             </div>
 
             {/* Pricing Cards Grid: single passes */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 items-stretch">
               {ticketTiers.filter((tier) => peopleAdmitted(tier) === 1).map(renderTierCard)}
             </div>
 
