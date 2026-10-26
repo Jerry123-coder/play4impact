@@ -20,7 +20,6 @@ const promoCodeHashes: Record<string, PromoCode> = {
   '702ba0653a5c002b186cb737457700d0e1da2d53f1ad8a7da544c815ef874bf5': { percent: 12, community: 'AWS Community' },
   '436b23c516dcb22f3770a980ad809c401a8f6184746c934b920e6d9924e85dcf': { percent: 12, community: 'Valorcity Wellness Club' },
   '973bd9ab819e9b17195ce69ae4b5cc1fbe105c7efc1e26c568ef50b5604fa077': { percent: 12, community: 'Developers In Vogue' },
-  '5f6becf8d193a8f5143b72c82417f96f1dbebf25e9e8041c28cb2d351dd3d0f3': { percent: 12, community: 'Tema Run Club' },
   '3abf80a0bea6c3c162e3382258f9c755f53e6abe06caece7abafede1a9f59ac3': { percent: 12, community: 'Buro gh' },
   '659c850bc30e74913a87db3733e9eda0174b72601a955ac22d6ae16f660eb4c7': { percent: 12, community: 'Runner Alliance' },
   '1848588ec9396db66b23a612a1bd216bc9c98981228acba5aecd9d2c672dce57': { percent: 12, community: 'New partner (name pending)' },

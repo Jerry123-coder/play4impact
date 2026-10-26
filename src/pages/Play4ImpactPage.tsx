@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   FaTrophy as Trophy,
   FaBriefcase as Briefcase,
@@ -63,7 +63,7 @@ const faqs = [
   },
   {
     q: 'Is there a dress code?',
-    a: 'Yes! The dress code is Play4Impact Whites: white + a touch of Play4Impact colour.',
+    a: 'Yes! The dress code is a sporty look.',
   },
   {
     q: 'Will food be provided?',
@@ -91,12 +91,12 @@ const eventPartners: Partner[] = [
   { name: 'Media For Us', category: 'Media Partner', logo: '/images/p4i/sponsors/media-for-us.png' },
   { name: 'YFM Ghana', category: 'Media Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
   { name: 'Sporty FM', category: 'Media Partner', logo: '/images/p4i/sponsors/sporty-fm.png' },
-  { name: 'MX24 TV', category: 'Media Partner', logo: '/images/p4i/sponsors/mx24-tv.png' },
+  { name: 'Aristolens', category: 'Media Partner', logo: '/images/p4i/sponsors/aristolens.png', tileBg: '#000000' },
   { name: 'B&FT', category: 'Media Partner', logo: '/images/p4i/sponsors/bft.png' },
   { name: 'Inomotech', category: 'Event Branding Partner', logo: '/images/p4i/sponsors/inomotech.png' },
   { name: 'goivents', category: 'Technology Partner', logo: '/images/p4i/sponsors/goivents.png' },
   { name: 'DP Lighting', category: 'Experience Partner', logo: '/images/p4i/sponsors/dp-lighting.png' },
-  { name: 'Leti Afa', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/leti-afa-logo.png', tileBg: '#10324B' },
+  { name: 'Leti Afa', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/leti-afa-badge.png', tileBg: '#10324B' },
 ];
 
 // Row 2: community partners
@@ -109,7 +109,6 @@ const communityPartners: Partner[] = [
   { name: 'Ladies In Design Network', category: 'Community Partner', logo: '/images/p4i/sponsors/ladies-in-design-network.png' },
   { name: 'Developers In Vogue', category: 'Community Partner', logo: '/images/p4i/sponsors/developers-in-vogue.png' },
   { name: 'Valorcity Wellness Club', category: 'Community Partner', logo: '/images/p4i/sponsors/valorcity.png', tileBg: '#1F222B' },
-  { name: 'Tema Run Club', category: 'Community Partner', logo: '/images/p4i/sponsors/tema-run-club.png' },
   { name: 'Runner Alliance', category: 'Community Partner', logo: '/images/p4i/sponsors/runner-alliance.png', tileBg: '#1F222B' },
   { name: 'Buro gh', category: 'Community Partner', logo: '/images/p4i/sponsors/buro.png', tileBg: '#000000' },
 ];
@@ -380,6 +379,58 @@ const CountdownUnit: React.FC<{ value: number; label: string; highlight?: boolea
   </div>
 );
 
+// Pass cards: horizontal swipe carousel (with dots) below xl, plain grid on desktop.
+const TierRail: React.FC<{ columns: 2 | 4; children: React.ReactNode[] }> = ({ columns, children }) => {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  const onScroll = () => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const cards = Array.from(rail.children) as HTMLElement[];
+    const center = rail.scrollLeft + rail.clientWidth / 2;
+    let best = 0;
+    cards.forEach((c, i) => {
+      if (Math.abs(c.offsetLeft + c.offsetWidth / 2 - center) < Math.abs(cards[best].offsetLeft + cards[best].offsetWidth / 2 - center)) best = i;
+    });
+    setActive(best);
+  };
+
+  const goTo = (i: number) => {
+    const rail = railRef.current;
+    const card = rail?.children[i] as HTMLElement | undefined;
+    if (rail && card) rail.scrollTo({ left: card.offsetLeft - (rail.clientWidth - card.offsetWidth) / 2, behavior: 'smooth' });
+  };
+
+  return (
+    <div>
+      <div
+        ref={railRef}
+        onScroll={onScroll}
+        className={`flex items-start gap-5 overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pt-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:grid xl:overflow-visible xl:mx-auto xl:px-0 xl:gap-6 xl:items-start ${
+          columns === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-2 xl:max-w-4xl'
+        }`}
+      >
+        {children.map((child, i) => (
+          <div key={i} className="snap-center shrink-0 w-[84%] sm:w-[46%] md:w-[40%] xl:w-auto">
+            {child}
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 flex justify-center gap-2 xl:hidden">
+        {children.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Show pass ${i + 1}`}
+            className={`h-2 rounded-full transition-all cursor-pointer ${i === active ? 'w-7 bg-[#83D318]' : 'w-2 bg-white/25'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const Play4ImpactPage: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState<TicketTier>(tierById('standard')); // Default Premium Pass
   const [availability] = useAvailability(); // live ticket slots
@@ -435,86 +486,81 @@ export const Play4ImpactPage: React.FC = () => {
   const renderTierCard = (tier: TicketTier) => {
     const left = passesLeft(tier, availability); // null = unknown
     const soldOut = left === 0;
+    const baseName = tier.name.replace(/\s*\(.*\)$/, '');
+    const subName = tier.name.match(/\((.*)\)$/)?.[1]; // "General Pass (Triple Treat)" -> "Triple Treat"
 
     return (
       <div
         key={tier.id}
-        className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 ${
+        className={`relative rounded-3xl p-6 sm:p-7 flex flex-col transition-colors duration-300 ${
           tier.popular
-            ? 'bg-[#005461] border-2 border-[#83D318] shadow-2xl'
-            : 'bg-[#0A1F2E] border border-[#005461] hover:border-[#83D318]/40'
+            ? 'bg-[#005461] border-2 border-[#83D318] shadow-[0_20px_60px_-20px_rgba(131,211,24,0.45)]'
+            : 'bg-[#0A1F2E] border border-white/10 hover:border-[#83D318]/50'
         }`}
       >
-        {/* Badge */}
         {tier.badge && (
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-wider shadow-md">
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-[11px] font-black rounded-full uppercase tracking-wider shadow-md whitespace-nowrap">
             {tier.badge}
           </div>
         )}
 
-        <div className="space-y-6">
-          <div>
-            <h3 className="font-poppins text-2xl font-black text-white uppercase">
-                {/* "General Pass (Triple Treat)" -> name + lime subtitle */}
-                {tier.name.replace(/\s*\(.*\)$/, '')}
-                {tier.name.match(/\((.*)\)$/) && (
-                  <span className="block mt-1 text-lg text-[#83D318]">{tier.name.match(/\((.*)\)$/)![1]}</span>
-                )}
-              </h3>
-            <p className="text-xs text-slate-300 mt-2 min-h-[36px]">{tier.tagline}</p>
-          </div>
-
-          <div className="pt-2 border-t border-white/10 flex flex-wrap items-baseline gap-2">
-            <span className="text-4xl sm:text-5xl xl:text-[2.6rem] font-black text-[#83D318]">
-              {tier.price}
-            </span>
-            <span className="text-lg font-bold text-slate-300">GHS</span>
-            <span className="text-xs text-slate-400">
-            / {peopleAdmitted(tier) > 1 ? `${peopleAdmitted(tier)} people` : 'person'}
-          </span>
-            {left !== null && left > 0 && left <= LOW_STOCK_THRESHOLD && (
-              <span className="ml-auto px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-400/40 text-[10px] font-black uppercase tracking-wider text-rose-300">
-                Only {left} left
-              </span>
-            )}
-          </div>
-
-          <div className="space-y-3 pt-2">
-            <span className="text-xs uppercase tracking-wider text-slate-400 font-bold">
-              What's Included:
-            </span>
-            <ul className="space-y-2.5">
-              {tier.features.map((feat, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-0.5" />
-                  <span>{feat}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Name */}
+        <div className="min-h-[4.25rem]">
+          <h3 className="font-poppins text-xl sm:text-2xl font-black text-white uppercase leading-tight">{baseName}</h3>
+          <p className={`mt-1 text-sm ${subName ? 'font-black uppercase text-[#83D318]' : 'text-slate-300'}`}>
+            {subName ?? tier.tagline}
+          </p>
         </div>
 
-        <div className="pt-8">
-          <button
-            onClick={() => handleBuyTicket(tier)}
-            disabled={soldOut}
-            className={`w-full py-4 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg ${
-              soldOut
-                ? 'bg-white/10 text-slate-400 cursor-not-allowed'
-                : tier.popular
-                ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] hover:scale-105 cursor-pointer'
-                : 'bg-[#005461] hover:bg-[#006f80] text-white hover:scale-105 cursor-pointer'
-            }`}
-          >
-            {soldOut ? (
-              <span>Sold Out</span>
-            ) : (
-              <>
-                <span>Buy Ticket</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
+        {/* Price */}
+        <div className="mt-4 flex items-baseline gap-2">
+          <span className="text-5xl xl:text-[2.75rem] font-black text-[#83D318] leading-none">{tier.price}</span>
+          <span className="text-base font-bold text-slate-200">GHS</span>
+          <span className="text-xs text-slate-400">/ {peopleAdmitted(tier) > 1 ? `${peopleAdmitted(tier)} people` : 'person'}</span>
+        </div>
+        <p className="mt-2 h-5 text-xs text-slate-400">
+          {subName ? tier.tagline : null}
+          {!subName && left !== null && left > 0 && left <= LOW_STOCK_THRESHOLD && (
+            <span className="font-black uppercase tracking-wider text-rose-300">Only {left} left</span>
+          )}
+        </p>
+        {subName && left !== null && left > 0 && left <= LOW_STOCK_THRESHOLD && (
+          <p className="text-xs font-black uppercase tracking-wider text-rose-300">Only {left} left</p>
+        )}
+
+        {/* CTA: same height on every card */}
+        <button
+          onClick={() => handleBuyTicket(tier)}
+          disabled={soldOut}
+          className={`mt-4 w-full py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+            soldOut
+              ? 'bg-white/10 text-slate-400 cursor-not-allowed'
+              : tier.popular
+              ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] cursor-pointer shadow-lg'
+              : 'bg-white/10 hover:bg-[#83D318] hover:text-[#10324B] text-white cursor-pointer'
+          }`}
+        >
+          {soldOut ? (
+            <span>Sold Out</span>
+          ) : (
+            <>
+              <span>Buy Ticket</span>
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
+        </button>
+
+        {/* What's included */}
+        <div className="mt-6 pt-5 border-t border-white/10">
+          <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">What's included</span>
+          <ul className="mt-3 space-y-2.5">
+            {tier.features.map((feat, idx) => (
+              <li key={idx} className="flex items-start gap-2.5 text-[13px] leading-snug text-slate-200">
+                <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-px" />
+                <span>{feat}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     );
@@ -691,10 +737,10 @@ stakeholders, and emerging changemakers.
                   </div>
                   <div className="min-w-0">
                     <span className="font-poppins text-[10px] font-extrabold uppercase tracking-wider text-[#83D318] block">
-                      Dress Code: Play4Impact Whites
+                      Dress Code
                     </span>
                     <span className="font-poppins text-sm font-semibold text-white block">
-                      White + a touch of Play4Impact colour.
+                      Sporty look
                     </span>
                   </div>
                 </div>
@@ -913,20 +959,18 @@ stakeholders, and emerging changemakers.
               </div> */}
             </div>
 
-            {/* Pricing Cards Grid: single passes */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 items-stretch">
-              {ticketTiers.filter((tier) => peopleAdmitted(tier) === 1).map(renderTierCard)}
-            </div>
+            {/* Single passes: swipe carousel on mobile/tablet, 4 columns on desktop */}
+            <TierRail columns={4}>{ticketTiers.filter((tier) => peopleAdmitted(tier) === 1).map(renderTierCard)}</TierRail>
 
             {/* Group passes */}
-            <div className="mt-20 text-center space-y-2">
+            <div className="mt-16 text-center space-y-2">
               <span className="text-xs font-bold text-[#83D318] uppercase tracking-widest">Group Passes</span>
               <h3 className="font-poppins text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
                 Bring Your Crew <span className="text-[#83D318]">&amp; Save</span>
               </h3>
             </div>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
-              {ticketTiers.filter((tier) => peopleAdmitted(tier) > 1).map(renderTierCard)}
+            <div className="mt-10">
+              <TierRail columns={2}>{ticketTiers.filter((tier) => peopleAdmitted(tier) > 1).map(renderTierCard)}</TierRail>
             </div>
 
           </div>
