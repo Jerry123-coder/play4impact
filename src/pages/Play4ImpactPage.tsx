@@ -407,7 +407,7 @@ const TierRail: React.FC<{ columns: 2 | 4; children: React.ReactNode[] }> = ({ c
       <div
         ref={railRef}
         onScroll={onScroll}
-        className={`flex items-start gap-5 overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pt-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:grid xl:overflow-visible xl:mx-auto xl:px-0 xl:gap-6 xl:items-start ${
+        className={`flex items-stretch gap-5 overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pt-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden xl:grid xl:overflow-visible xl:mx-auto xl:px-0 xl:gap-5 xl:items-stretch ${
           columns === 4 ? 'xl:grid-cols-4' : 'xl:grid-cols-2 xl:max-w-4xl'
         }`}
       >
@@ -492,7 +492,7 @@ export const Play4ImpactPage: React.FC = () => {
     return (
       <div
         key={tier.id}
-        className={`relative rounded-3xl p-6 sm:p-7 flex flex-col transition-colors duration-300 ${
+        className={`relative h-full rounded-3xl p-6 flex flex-col transition-colors duration-300 ${
           tier.popular
             ? 'bg-[#005461] border-2 border-[#83D318] shadow-[0_20px_60px_-20px_rgba(131,211,24,0.45)]'
             : 'bg-[#0A1F2E] border border-white/10 hover:border-[#83D318]/50'
@@ -528,32 +528,10 @@ export const Play4ImpactPage: React.FC = () => {
           <p className="text-xs font-black uppercase tracking-wider text-rose-300">Only {left} left</p>
         )}
 
-        {/* CTA: same height on every card */}
-        <button
-          onClick={() => handleBuyTicket(tier)}
-          disabled={soldOut}
-          className={`mt-4 w-full py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
-            soldOut
-              ? 'bg-white/10 text-slate-400 cursor-not-allowed'
-              : tier.popular
-              ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] cursor-pointer shadow-lg'
-              : 'bg-white/10 hover:bg-[#83D318] hover:text-[#10324B] text-white cursor-pointer'
-          }`}
-        >
-          {soldOut ? (
-            <span>Sold Out</span>
-          ) : (
-            <>
-              <span>Buy Ticket</span>
-              <ArrowRight className="w-4 h-4" />
-            </>
-          )}
-        </button>
-
         {/* What's included */}
-        <div className="mt-6 pt-5 border-t border-white/10">
+        <div className="mt-4 pt-4 border-t border-white/10">
           <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">What's included</span>
-          <ul className="mt-3 space-y-2.5">
+          <ul className="mt-3 space-y-2">
             {tier.features.map((feat, idx) => (
               <li key={idx} className="flex items-start gap-2.5 text-[13px] leading-snug text-slate-200">
                 <CheckCircle2 className="w-4 h-4 text-[#83D318] shrink-0 mt-px" />
@@ -561,6 +539,30 @@ export const Play4ImpactPage: React.FC = () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="mt-auto pt-6">
+          {/* CTA pinned to the bottom so buttons line up */}
+          <button
+            onClick={() => handleBuyTicket(tier)}
+            disabled={soldOut}
+            className={`mt-auto w-full py-3.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+              soldOut
+                ? 'bg-white/10 text-slate-400 cursor-not-allowed'
+                : tier.popular
+                ? 'bg-[#83D318] hover:bg-[#96eb1e] text-[#10324B] cursor-pointer shadow-lg'
+                : 'bg-white/10 hover:bg-[#83D318] hover:text-[#10324B] text-white cursor-pointer'
+            }`}
+          >
+            {soldOut ? (
+              <span>Sold Out</span>
+            ) : (
+              <>
+                <span>Buy Ticket</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
         </div>
       </div>
     );
@@ -937,7 +939,7 @@ stakeholders, and emerging changemakers.
 
         {/* TICKET TIERS SECTION */}
         <section id="tickets" className="py-24 bg-[#10324B] relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
               {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#83D318] text-[#10324B] text-xs font-black rounded-full uppercase tracking-widest shadow-lg">
                 <Sparkles className="w-4 h-4" />
