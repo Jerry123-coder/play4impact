@@ -27,6 +27,9 @@ const promoCodeHashes: Record<string, PromoCode> = {
   // 12% general code for other partners and Wellness Run participants
   'b6fc7ca0cc2aea5ab68ce2c9e5a7233a535174c722e0787fbcaa6044aa2d754e': { percent: 12, community: 'Partners & Wellness Run' },
 
+  // 20% code for Wellness Run participants
+  'de0a60bb1cc5eee854f5dead729645979f12eccfad90226da1ae667fd4bb087b': { percent: 20, community: 'Wellness Run Participants' },
+
   // Earlier 12% community partner codes
   '2e8b875aa9637e5691470e8a64212ac90c8df2b0877cba30e6bf4551202381a6': { percent: 12, community: 'Community Partner' },
   '86be1849ceb20f005653d0b5e6cadcac7b6e9abd064bfb8e572dac98e45df231': { percent: 12, community: 'Community Partner' },

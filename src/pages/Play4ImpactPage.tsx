@@ -88,6 +88,7 @@ const eventPartners: Partner[] = [
   { name: 'Rivia Clinics', category: 'Official Medical Partner', logo: '/images/p4i/sponsors/rivia-clinics-logo.png' },
   { name: 'Red Bull', category: 'Energy Partner', logo: '/images/p4i/sponsors/red-bull.svg' },
   { name: 'Decathlon', category: 'Sports Partner', logo: '/images/p4i/sponsors/decathlon-logo.png' },
+  { name: 'Sparkxx', category: 'Snack Partner', logo: '/images/p4i/sponsors/sparkxx.png' },
   { name: 'Media For Us', category: 'Media Partner', logo: '/images/p4i/sponsors/media-for-us.png' },
   { name: 'YFM Ghana', category: 'Media Partner', logo: '/images/p4i/sponsors/yfm-ghana.png' },
   { name: 'Sporty FM', category: 'Media Partner', logo: '/images/p4i/sponsors/sporty-fm.png' },
@@ -96,7 +97,7 @@ const eventPartners: Partner[] = [
   { name: 'Inomotech', category: 'Event Branding Partner', logo: '/images/p4i/sponsors/inomotech.png' },
   { name: 'goivents', category: 'Technology Partner', logo: '/images/p4i/sponsors/goivents.png' },
   { name: 'DP Lighting', category: 'Experience Partner', logo: '/images/p4i/sponsors/dp-lighting.png' },
-  { name: 'Leti Afa', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/leti-afa-badge.png', tileBg: '#10324B' },
+  { name: 'Leti Afa', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/leti-afa-logo.png', tileBg: '#10324B' },
 ];
 
 // Row 2: community partners
@@ -109,7 +110,6 @@ const communityPartners: Partner[] = [
   { name: 'Ladies In Design Network', category: 'Community Partner', logo: '/images/p4i/sponsors/ladies-in-design-network.png' },
   { name: 'Developers In Vogue', category: 'Community Partner', logo: '/images/p4i/sponsors/developers-in-vogue.png' },
   { name: 'Valorcity Wellness Club', category: 'Community Partner', logo: '/images/p4i/sponsors/valorcity.png', tileBg: '#1F222B' },
-  { name: 'Runner Alliance', category: 'Community Partner', logo: '/images/p4i/sponsors/runner-alliance.png', tileBg: '#1F222B' },
   { name: 'Buro gh', category: 'Community Partner', logo: '/images/p4i/sponsors/buro.png', tileBg: '#000000' },
 ];
 
