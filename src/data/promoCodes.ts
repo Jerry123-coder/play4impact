@@ -21,7 +21,6 @@ const promoCodeHashes: Record<string, PromoCode> = {
   '436b23c516dcb22f3770a980ad809c401a8f6184746c934b920e6d9924e85dcf': { percent: 12, community: 'Valorcity Wellness Club' },
   '973bd9ab819e9b17195ce69ae4b5cc1fbe105c7efc1e26c568ef50b5604fa077': { percent: 12, community: 'Developers In Vogue' },
   '3abf80a0bea6c3c162e3382258f9c755f53e6abe06caece7abafede1a9f59ac3': { percent: 12, community: 'Buro gh' },
-  '659c850bc30e74913a87db3733e9eda0174b72601a955ac22d6ae16f660eb4c7': { percent: 12, community: 'Runner Alliance' },
   '1848588ec9396db66b23a612a1bd216bc9c98981228acba5aecd9d2c672dce57': { percent: 12, community: 'New partner (name pending)' },
 
   // 12% general code for other partners and Wellness Run participants
