@@ -31,9 +31,9 @@ import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
 import { ticketTiers, peopleAdmitted, tierById, type TicketTier } from '../data/ticketTiers';
 import { useAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
-// Event start: Sat 7 Nov 2026, 12:00 PM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
+// Event start: Sat 21 Nov 2026, 12:00 PM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
 // Keep the ISO format exact (two-digit hour); a typo here makes the countdown show all zeros.
-const EVENT_START = new Date('2026-11-07T12:00:00Z');
+const EVENT_START = new Date('2026-11-21T12:00:00Z');
 
 // Google Form for partnership sign-ups. Paste the form's share link here;
 // until then the partnership button falls back to email.
@@ -59,7 +59,7 @@ const faqs = [
   },
   {
     q: 'Where and when is the event taking place?',
-    a: 'Play4Impact Padel is scheduled to take place on Saturday, 7th November 2026 at Padel Town, Aviation Social Center - Accra, Ghana.',
+    a: 'Play4Impact Padel is scheduled to take place on Saturday, 21st November 2026 at Padel Town, Aviation Social Center - Accra, Ghana.',
   },
   {
     q: 'Is there a dress code?',
@@ -696,7 +696,7 @@ stakeholders, and emerging changemakers.
                 <div className="pt-2">
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
-                      { label: 'Date', value: 'Nov 7, 2026', icon: Calendar },
+                      { label: 'Date', value: 'Nov 21, 2026', icon: Calendar },
                       { label: 'Time', value: '12:00 PM', icon: Clock },
                       { label: 'Venue', value: 'Padel Town', fullValue: 'Padel Town, Aviation Social Center', icon: MapPin },
                     ].map((info) => {
@@ -1339,7 +1339,7 @@ stakeholders, and emerging changemakers.
 
             <div className="text-center md:text-right text-slate-300 text-[11px]">
               <p>© 2026 Techies4Impact. All Rights Reserved.</p>
-              <p className="mt-1 text-[#83D318] font-bold">Nov 7, 2026 • Padel Town, Aviation Social Center - Accra</p>
+              <p className="mt-1 text-[#83D318] font-bold">Nov 21, 2026 • Padel Town, Aviation Social Center - Accra</p>
             </div>
 
           </div>
