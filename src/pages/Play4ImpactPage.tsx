@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     q: 'Can I participate in the Padel matches or watch?',
-    a: 'All attendees can watch the Padel matches. Players are limited to registered corporate entities unless otherwise stated.  ',
+    a: 'Both! All attendees can watch the Padel matches, and playing is open to registered corporate teams as well as individuals. To play, reach out to the team through the contact section to register.',
   },
   {
     q: 'How do payments work via Paystack?',
