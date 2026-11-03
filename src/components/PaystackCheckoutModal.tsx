@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
 import { ticketTiers, peopleAdmitted, type TicketTier } from '../data/ticketTiers';
-import { findPromoCode } from '../data/promoCodes';
+import { findPromoCode, promoCodesExpired, PROMO_EXPIRY_LABEL } from '../data/promoCodes';
 import { ROUTE_TICKET_SALES_TO_SUBACCOUNT, subaccountOptions } from '../data/paystack';
 import { useAvailability, fetchAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
@@ -140,6 +140,10 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
       setPromoCommunity(null);
       return;
     }
+    if (promoCodesExpired()) {
+      toast.error(`Discount codes expired on ${PROMO_EXPIRY_LABEL}.`);
+      return;
+    }
     const promo = await findPromoCode(clean);
     if (promo) {
       setAppliedPromo(clean);
@@ -169,6 +173,14 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
 
     if (isGift && (!recipientName.trim() || !recipientEmail.trim())) {
       toast.error('Please provide recipient name and email for the gift ticket.');
+      return;
+    }
+
+    if (appliedPromo && promoCodesExpired()) {
+      setAppliedPromo(null);
+      setDiscountPercent(0);
+      setPromoCommunity(null);
+      toast.error(`Discount codes expired on ${PROMO_EXPIRY_LABEL}. Your total has been updated.`);
       return;
     }
 
