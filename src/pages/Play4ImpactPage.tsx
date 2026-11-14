@@ -100,7 +100,7 @@ const eventPartners: Partner[] = [
   { name: 'Inomotech', category: 'Event Branding Partner', logo: '/images/p4i/sponsors/inomotech.png' },
   { name: 'goivents', category: 'Technology Partner', logo: '/images/p4i/sponsors/goivents.png' },
   { name: 'DP Lighting', category: 'Experience Partner', logo: '/images/p4i/sponsors/dp-lighting.png' },
-  { name: 'Leti Afa', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/leti-afa-logo.png', tileBg: '#10324B' },
+  { name: 'Play Province', category: 'Gaming & Digital Experience Partner', logo: '/images/p4i/sponsors/play-province.png' },
 ];
 
 // Row 2: community partners
