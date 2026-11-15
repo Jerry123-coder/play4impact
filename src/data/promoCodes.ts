@@ -1,6 +1,9 @@
 export interface PromoCode {
   percent: number;
   community: string;
+  // Optional per-code expiry; codes without one use PROMO_CODES_VALID_UNTIL.
+  validUntil?: Date;
+  expiryLabel?: string;
 }
 
 // Promo codes are stored only as salted SHA-256 hashes, so the readable codes never
@@ -13,7 +16,7 @@ const promoCodeHashes: Record<string, PromoCode> = {
   // Community codes (12%)
   '1edd1b779cc4bbde4af89f2885ff2993ea0646ac68bf5bf5c8521e076ba4deae': { percent: 12, community: 'SpaceX' },
   'f6900b05fa52c097b85b9d993a2c1c52babf2b1772773b365a4bdd29979a125f': { percent: 12, community: 'Active Accra Club' },
-  '64084060b24f4eeb00ce9a372340bd467ee4544e6b0265fd31c2b539845c5390': { percent: 12, community: '7even Sports' },
+  '64084060b24f4eeb00ce9a372340bd467ee4544e6b0265fd31c2b539845c5390': { percent: 20, community: '7even Sports' },
   '61a87988254acb3db08603de2b5848db9f449020b4ef54fa863d88f3bf3b3b99': { percent: 12, community: 'Global Shapers Accra Hub' },
   '6ee94a4fdb34966b7e04a94bc1ef389c5c6dc5c2332cd266f2b1e9de5cfa7389': { percent: 12, community: 'Because She Can' },
   '0b0a1a8d251f866f337ac236cdf378bc42e7356b1ac8b88e9a13b354535925d0': { percent: 12, community: 'Ladies In Design Network' },
@@ -29,6 +32,14 @@ const promoCodeHashes: Record<string, PromoCode> = {
   // 20% code for Wellness Run participants
   'de0a60bb1cc5eee854f5dead729645979f12eccfad90226da1ae667fd4bb087b': { percent: 20, community: 'Wellness Run Participants' },
 
+  // 16% Goldcoast Run code, valid until the event starts (Sat 21 Nov 2026, 2:00 PM Accra time)
+  '9ab72def50ad617eaab14a9c76a690e0e98e05f9e3ceaff96b7ac756adaaf0f5': {
+    percent: 16,
+    community: 'Goldcoast Run',
+    validUntil: new Date('2026-11-21T14:00:00Z'),
+    expiryLabel: '21 November',
+  },
+
   // Earlier 12% community partner codes
   '2e8b875aa9637e5691470e8a64212ac90c8df2b0877cba30e6bf4551202381a6': { percent: 12, community: 'Community Partner' },
   '86be1849ceb20f005653d0b5e6cadcac7b6e9abd064bfb8e572dac98e45df231': { percent: 12, community: 'Community Partner' },
@@ -41,14 +52,17 @@ const sha256Hex = async (text: string) => {
   return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
 };
 
-// All discount codes stop working after the end of Monday 16 November 2026 (Accra time, GMT).
+// Discount codes stop working after the end of Monday 16 November 2026 (Accra time, GMT),
+// unless the code has its own validUntil.
 export const PROMO_CODES_VALID_UNTIL = new Date('2026-11-16T23:59:59Z');
 export const PROMO_EXPIRY_LABEL = '16 November';
 
-export const promoCodesExpired = (now = new Date()) => now > PROMO_CODES_VALID_UNTIL;
+export const promoExpired = (promo: PromoCode, now = new Date()) => now > (promo.validUntil ?? PROMO_CODES_VALID_UNTIL);
+export const promoExpiryLabel = (promo: PromoCode) => promo.expiryLabel ?? PROMO_EXPIRY_LABEL;
 
+// Looks up a code; check promoExpired() on the result before applying it.
 export const findPromoCode = async (code: string): Promise<PromoCode | null> => {
   const normalized = code.trim().toUpperCase();
-  if (!normalized || promoCodesExpired()) return null;
+  if (!normalized) return null;
   return promoCodeHashes[await sha256Hex(PROMO_SALT + normalized)] ?? null;
 };

@@ -7,7 +7,7 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 
 // Slot limits and tier → pool mapping. Keep in sync with api/slots.ts.
-const LIMITS = { teaser: 50, general: 50, premium: 120, executive: 40 } as const;
+const LIMITS = { teaser: 60, general: 100, premium: 120, executive: 20 } as const;
 type Pool = keyof typeof LIMITS;
 
 const TIER_POOLS: Record<string, { pool: Pool; admits: number }> = {

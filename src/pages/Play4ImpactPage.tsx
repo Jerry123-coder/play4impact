@@ -31,9 +31,9 @@ import { PaystackCheckoutModal } from '../components/PaystackCheckoutModal';
 import { ticketTiers, peopleAdmitted, tierById, type TicketTier } from '../data/ticketTiers';
 import { useAvailability, passesLeft, LOW_STOCK_THRESHOLD } from '../data/ticketSlots';
 
-// Event start: Sat 21 Nov 2026, 12:00 PM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
+// Event start: Sat 21 Nov 2026, 2:00 PM Accra time. Ghana is UTC+0 all year, so 'Z' is local time.
 // Keep the ISO format exact (two-digit hour); a typo here makes the countdown show all zeros.
-const EVENT_START = new Date('2026-11-21T12:00:00Z');
+const EVENT_START = new Date('2026-11-21T14:00:00Z');
 
 // Google Form for partnership sign-ups. Paste the form's share link here;
 // until then the partnership button falls back to email.
@@ -700,7 +700,7 @@ stakeholders, and emerging changemakers.
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
                       { label: 'Date', value: 'Nov 21, 2026', icon: Calendar },
-                      { label: 'Time', value: '12:00 PM', icon: Clock },
+                      { label: 'Time', value: '2:00 PM', icon: Clock },
                       { label: 'Venue', value: 'Padel Town', fullValue: 'Padel Town, Aviation Social Center', icon: MapPin },
                     ].map((info) => {
                       const InfoIcon = info.icon;
