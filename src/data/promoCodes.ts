@@ -52,10 +52,10 @@ const sha256Hex = async (text: string) => {
   return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
 };
 
-// Discount codes stop working after the end of Monday 16 November 2026 (Accra time, GMT),
+// Discount codes stop working after the end of Friday 20 November 2026 (Accra time, GMT),
 // unless the code has its own validUntil.
-export const PROMO_CODES_VALID_UNTIL = new Date('2026-11-16T23:59:59Z');
-export const PROMO_EXPIRY_LABEL = '16 November';
+export const PROMO_CODES_VALID_UNTIL = new Date('2026-11-20T23:59:59Z');
+export const PROMO_EXPIRY_LABEL = '20 November';
 
 export const promoExpired = (promo: PromoCode, now = new Date()) => now > (promo.validUntil ?? PROMO_CODES_VALID_UNTIL);
 export const promoExpiryLabel = (promo: PromoCode) => promo.expiryLabel ?? PROMO_EXPIRY_LABEL;
