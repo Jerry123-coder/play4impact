@@ -17,6 +17,10 @@ export interface TicketTier {
 
 export const peopleAdmitted = (tier: TicketTier) => tier.admits ?? 1;
 
+// Pools closed by hand: every pass in them shows "Sold out" and can't be bought,
+// whatever the live slot count says. Remove a pool from this list to reopen it.
+export const SOLD_OUT_POOLS: SlotPool[] = ['premium'];
+
 // Look up a tier by id (never by list position)
 export const tierById = (id: string) => ticketTiers.find((t) => t.id === id)!;
 

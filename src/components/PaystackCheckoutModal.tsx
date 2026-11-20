@@ -385,10 +385,16 @@ export const PaystackCheckoutModal: React.FC<PaystackCheckoutModalProps> = ({
                               <h5 className="text-base sm:text-lg font-poppins font-black tracking-tight uppercase text-[#10324B]">
                                 {tier.name}
                               </h5>
-                              {tier.badge && (
-                                <span className="font-poppins text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#83D318] text-[#10324B]">
-                                  {tier.badge}
+                              {soldOut ? (
+                                <span className="font-poppins text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-rose-600 text-white">
+                                  Sold out
                                 </span>
+                              ) : (
+                                tier.badge && (
+                                  <span className="font-poppins text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-[#83D318] text-[#10324B]">
+                                    {tier.badge}
+                                  </span>
+                                )
                               )}
                             </div>
                             <p className="font-poppins text-xs font-medium text-slate-500 line-clamp-1 mt-0.5">

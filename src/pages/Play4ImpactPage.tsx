@@ -435,7 +435,7 @@ const TierRail: React.FC<{ columns: 2 | 4; children: React.ReactNode[] }> = ({ c
 };
 
 export const Play4ImpactPage: React.FC = () => {
-  const [selectedTier, setSelectedTier] = useState<TicketTier>(tierById('standard')); // Default Premium Pass
+  const [selectedTier, setSelectedTier] = useState<TicketTier>(tierById('basic')); // Default General Pass
   const [availability] = useAvailability(); // live ticket slots
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -496,15 +496,23 @@ export const Play4ImpactPage: React.FC = () => {
       <div
         key={tier.id}
         className={`relative h-full rounded-3xl p-6 flex flex-col transition-colors duration-300 ${
-          tier.popular
+          soldOut
+            ? 'bg-[#0A1F2E] border border-white/10'
+            : tier.popular
             ? 'bg-[#005461] border-2 border-[#83D318] shadow-[0_20px_60px_-20px_rgba(131,211,24,0.45)]'
             : 'bg-[#0A1F2E] border border-white/10 hover:border-[#83D318]/50'
         }`}
       >
-        {tier.badge && (
-          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-[11px] font-black rounded-full uppercase tracking-wider shadow-md whitespace-nowrap">
-            {tier.badge}
+        {soldOut ? (
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-rose-600 text-white text-[11px] font-black rounded-full uppercase tracking-wider shadow-md whitespace-nowrap">
+            Sold Out
           </div>
+        ) : (
+          tier.badge && (
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#83D318] text-[#10324B] text-[11px] font-black rounded-full uppercase tracking-wider shadow-md whitespace-nowrap">
+              {tier.badge}
+            </div>
+          )
         )}
 
         {/* Name */}
@@ -517,7 +525,9 @@ export const Play4ImpactPage: React.FC = () => {
 
         {/* Price */}
         <div className="mt-4 flex items-baseline gap-2">
-          <span className="text-5xl xl:text-[2.75rem] font-black text-[#83D318] leading-none">{tier.price}</span>
+          <span className={`text-5xl xl:text-[2.75rem] font-black leading-none ${soldOut ? 'text-slate-500 line-through' : 'text-[#83D318]'}`}>
+            {tier.price}
+          </span>
           <span className="text-base font-bold text-slate-200">GHS</span>
           <span className="text-xs text-slate-400">/ {peopleAdmitted(tier) > 1 ? `${peopleAdmitted(tier)} people` : 'person'}</span>
         </div>

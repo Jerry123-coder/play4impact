@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { peopleAdmitted, type SlotPool, type TicketTier } from './ticketTiers';
+import { peopleAdmitted, SOLD_OUT_POOLS, type SlotPool, type TicketTier } from './ticketTiers';
 
 export interface PoolAvailability {
   limit: number;
@@ -37,8 +37,9 @@ export const useAvailability = (enabled = true) => {
 };
 
 // How many of this pass can still be bought (a group pass needs room for the whole group).
-// null = unknown (availability not loaded), so don't limit.
+// null = unknown (availability not loaded), so don't limit. Pools in SOLD_OUT_POOLS are always 0.
 export const passesLeft = (tier: TicketTier, availability: Availability | null): number | null => {
+  if (SOLD_OUT_POOLS.includes(tier.pool)) return 0;
   const pool = availability?.[tier.pool];
   return pool ? Math.floor(pool.remaining / peopleAdmitted(tier)) : null;
 };
